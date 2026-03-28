@@ -1,0 +1,154 @@
+.deals-section {
+  padding: 6rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.deals-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+.deal-main {
+  background: linear-gradient(135deg, #111, #1a1a1a);
+  border-radius: 1.5rem;
+  padding: 3rem;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid #2a2a2a;
+}
+
+.deal-main:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.deal-tag {
+  background: #ef4444;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 0.25rem;
+  display: inline-block;
+}
+
+.deal-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 1rem 0;
+}
+
+.deal-sub {
+  color: #a8a29e;
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+.deal-bottom {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.deal-discount {
+  background: #22c55e;
+  color: white;
+  padding: 0.5rem 1rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  border-radius: 0.5rem;
+}
+
+.btn-deal {
+  background: #f0ede6;
+  color: #0d0d0d;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btn-deal:hover {
+  background: #e4decf;
+  transform: translateY(-1px);
+}
+
+.deals-secondary {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.deal-sm {
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 180px;
+}
+
+.deal-sm:hover {
+  border-color: #22c55e;
+  transform: translateY(-2px);
+}
+
+.deal-sm-icon {
+  font-size: 2rem;
+}
+
+.deal-sm-title {
+  font-weight: 600;
+  font-size: 1.125rem;
+  margin: 0.5rem 0;
+}
+
+.deal-sm-sub {
+  color: #a8a29e;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.deal-sm-discount {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.btn-deal-sm {
+  background: #22c55e;
+  color: white;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .deals-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .deal-main {
+    height: auto;
+    padding: 2rem;
+  }
+
+  .deals-section {
+    padding: 4rem 1rem;
+  }
+}
