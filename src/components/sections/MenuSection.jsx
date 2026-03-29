@@ -18,19 +18,10 @@ export default function MenuSection({
   const [loading, setLoading] = useState(true);
   const allCategories = ['all', ...categories];
 
-  // Simulate initial load — 1.2s skeleton then real cards
   useEffect(() => {
     const t = setTimeout(() => setLoading(false), 1200);
     return () => clearTimeout(t);
   }, []);
-
-  // When category or search changes, flash skeleton briefly
-  useEffect(() => {
-    if (loading) return;
-    setLoading(true);
-    const t = setTimeout(() => setLoading(false), 500);
-    return () => clearTimeout(t);
-  }, [selectedCategory, searchQuery]);
 
   return (
     <section className="menu-section" id="menu">
