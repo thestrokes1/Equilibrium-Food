@@ -29,7 +29,7 @@ export default function Home() {
       <TopBar />
       <Navbar />
       <main>
-        <Hero />
+        <Hero onSelectCategory={setSelectedCategory} />
         <MenuSection
           categories={categories}
           products={filteredProducts}

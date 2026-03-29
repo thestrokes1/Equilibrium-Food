@@ -244,3 +244,22 @@
   .btn-hero-primary,
   .btn-hero-ghost { width: 100%; }
 }
+
+.float-card-clickable {
+  cursor: pointer;
+  border-color: #22c55e;
+  text-align: left;
+  font-family: 'Outfit', sans-serif;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.float-card-clickable:hover {
+  border-color: #16a34a;
+}
+
+.float-arrow {
+  font-size: 14px;
+  color: #22c55e;
+  margin-left: 4px;
+  flex-shrink: 0;
+}

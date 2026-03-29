@@ -12,10 +12,15 @@ const STATS = [
 const fadeLeft  = { hidden: { opacity: 0, x: -40 }, show: { opacity: 1, x: 0 } };
 const fadeRight = { hidden: { opacity: 0, x:  40 }, show: { opacity: 1, x: 0 } };
 
-export default function Hero() {
+export default function Hero({ onSelectCategory }) {
   const { setIsOpen } = useCart();
 
   const scrollToMenu = () => {
+    document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const goToTopRated = () => {
+    onSelectCategory?.('burgers');
     document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -95,6 +100,7 @@ export default function Hero() {
           />
         </div>
 
+        {/* Delivery card — bottom left, not clickable */}
         <motion.div
           className="float-card float-card-bl"
           initial={{ opacity: 0, y: 12 }}
@@ -108,18 +114,25 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        <motion.div
-          className="float-card float-card-tr"
+        {/* Top rated card — clickable, filters to burgers */}
+        <motion.button
+          className="float-card float-card-tr float-card-clickable"
+          onClick={goToTopRated}
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.85 }}
+          whileHover={{ scale: 1.06, y: -2 }}
+          whileTap={{ scale: 0.97 }}
+          aria-label="View top rated burgers"
         >
           <div className="float-icon">⭐</div>
           <div>
             <div className="float-title">Top rated</div>
             <div className="float-sub">1,204 reviews</div>
           </div>
-        </motion.div>
+          <div className="float-arrow">→</div>
+        </motion.button>
+
       </motion.div>
 
     </section>

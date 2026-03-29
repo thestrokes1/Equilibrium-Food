@@ -17,9 +17,9 @@ const products = [
   },
   {
     id: 2,
-    name: 'Asado',
+    name: 'Pizza',
     price: 16.50,
-    image: '/images/Asado.jpg',
+    image: '/images/pizza.jpg',
     category: 'pizza',
     rating: 4.7,
     deliveryTime: '22',
