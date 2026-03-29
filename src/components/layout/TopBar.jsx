@@ -5,6 +5,8 @@ const PROMOS = [
   '🍕 Pizza Party $5 off',
   '🥗 Vegan Delight new arrival',
   '💰 Save up to $10 on orders over $50',
+  '🔥 Burger Bonanza 20% off',
+  '🍕 Pizza Party $5 off',
 ];
 
 export default function TopBar() {

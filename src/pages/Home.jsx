@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useCart } from '../context/CartContext';
 import TopBar from '../components/layout/TopBar';
 import Navbar from '../components/layout/Navbar';
 import Hero from '../components/sections/Hero';
@@ -10,21 +10,24 @@ import products from '../features/products/productData';
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [cartCount, setCartCount] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+  const { addItem } = useCart();
 
   const categories = Array.from(new Set(products.map(p => p.category)));
 
-  const filteredProducts =
-    selectedCategory === 'all'
-      ? products
-      : products.filter(p => p.category === selectedCategory);
-
-  const handleAddToCart = () => setCartCount(c => c + 1);
+  const filteredProducts = products.filter(p => {
+    const matchesCategory =
+      selectedCategory === 'all' || p.category === selectedCategory;
+    const matchesSearch =
+      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.restaurant?.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <div className="page-root">
       <TopBar />
-      <Navbar cartCount={cartCount} />
+      <Navbar />
       <main>
         <Hero />
         <MenuSection
@@ -32,7 +35,9 @@ export default function Home() {
           products={filteredProducts}
           selectedCategory={selectedCategory}
           onSelectCategory={setSelectedCategory}
-          onAddToCart={handleAddToCart}
+          searchQuery={searchQuery}
+          onSearch={setSearchQuery}
+          onAddToCart={addItem}
         />
         <DealsSection />
       </main>

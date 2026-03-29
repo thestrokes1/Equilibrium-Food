@@ -25,7 +25,7 @@ export default function FoodCard({
   const handleAdd = (e) => {
     e.preventDefault();
     setAdded(true);
-    onAdd?.();
+    onAdd?.({ id, name, price, image, restaurant });
     setTimeout(() => setAdded(false), 1200);
   };
 
