@@ -121,6 +121,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  overscroll-behavior: contain;
 }
 
 .drawer-items::-webkit-scrollbar       { width: 4px; }
@@ -189,19 +190,22 @@
 }
 
 .qty-btn {
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   border-radius: 6px;
   background: #222222;
   border: 1px solid #2a2a2a;
   color: #f0ede6;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background 0.15s, border-color 0.15s;
   line-height: 1;
+  /* Bigger tap target on mobile */
+  min-width: 28px;
+  min-height: 28px;
 }
 
 .qty-btn:hover {
@@ -213,13 +217,14 @@
   font-size: 13px;
   font-weight: 600;
   color: #f0ede6;
-  min-width: 16px;
+  min-width: 18px;
   text-align: center;
 }
 
 /* ── FOOTER ── */
 .drawer-footer {
-  padding: 20px 24px 28px;
+  padding: 20px 24px;
+  padding-bottom: max(24px, env(safe-area-inset-bottom));
   border-top: 1px solid #1e1e1e;
   display: flex;
   flex-direction: column;
@@ -241,7 +246,7 @@
   font-size: 16px;
   font-weight: 700;
   color: #f0ede6;
-  padding-top: 8px;
+  padding-top: 10px;
   border-top: 1px solid #1e1e1e;
   margin-top: 2px;
 }
@@ -259,8 +264,8 @@
   color: #0d0d0d;
   border: none;
   border-radius: 10px;
-  padding: 13px;
-  font-size: 14px;
+  padding: 14px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   font-family: 'Outfit', sans-serif;
@@ -281,7 +286,7 @@
   cursor: pointer;
   font-family: 'Outfit', sans-serif;
   text-align: center;
-  padding: 4px;
+  padding: 6px;
   transition: color 0.2s;
 }
 
@@ -289,5 +294,22 @@
 
 /* ── MOBILE ── */
 @media (max-width: 480px) {
-  .cart-drawer { width: 100vw; }
+  .cart-drawer {
+    width: 100vw;
+    border-left: none;
+    border-top: 1px solid #2a2a2a;
+  }
+
+  .drawer-header { padding: 20px 20px 16px; }
+  .drawer-items  { padding: 12px 20px; }
+
+  .drawer-footer {
+    padding: 16px 20px;
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
+
+  .btn-checkout {
+    padding: 16px;
+    font-size: 16px;
+  }
 }

@@ -28,6 +28,12 @@
   height: 0.5rem;
   background: #22c55e;
   border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
 }
 
 .hero-heading {
@@ -37,6 +43,7 @@
   line-height: 1.1;
   letter-spacing: -0.02em;
   margin: 0;
+  color: #f0ede6;
 }
 
 .hero-accent {
@@ -51,8 +58,10 @@
   line-height: 1.6;
   color: #a8a29e;
   max-width: 28rem;
+  margin: 0;
 }
 
+/* ── ACTIONS ── */
 .hero-actions {
   display: flex;
   gap: 1rem;
@@ -61,14 +70,16 @@
 
 .btn-hero-primary {
   background: #22c55e;
-  color: white;
+  color: #0d0d0d;
   border: none;
-  padding: 1rem 2rem;
+  padding: 0.875rem 2rem;
   font-size: 1rem;
   font-weight: 600;
   border-radius: 0.5rem;
   cursor: pointer;
-  transition: all 0.2s;
+  font-family: 'Outfit', sans-serif;
+  transition: background 0.2s, transform 0.15s;
+  white-space: nowrap;
 }
 
 .btn-hero-primary:hover {
@@ -84,10 +95,12 @@
   font-size: 0.875rem;
   border-radius: 0.5rem;
   cursor: pointer;
+  font-family: 'Outfit', sans-serif;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  transition: all 0.2s;
+  transition: border-color 0.2s, color 0.2s;
+  white-space: nowrap;
 }
 
 .btn-hero-ghost:hover {
@@ -95,11 +108,16 @@
   color: #22c55e;
 }
 
+.play-icon { font-size: 0.875rem; }
+
+/* ── STATS ── */
 .hero-stats {
   display: flex;
   gap: 2rem;
-  margin-top: 2rem;
+  margin-top: 1rem;
   flex-wrap: wrap;
+  padding-top: 1.5rem;
+  border-top: 1px solid #1a1a1a;
 }
 
 .hero-stat {
@@ -117,11 +135,12 @@
 
 .stat-label {
   font-size: 0.75rem;
-  color: #a8a29e;
+  color: #555555;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
+/* ── RIGHT ── */
 .hero-right {
   position: relative;
   height: 500px;
@@ -129,8 +148,7 @@
 
 .hero-img-wrap {
   position: absolute;
-  top: 0;
-  right: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
 }
@@ -142,57 +160,87 @@
   border-radius: 1.5rem;
 }
 
+/* Float cards */
 .float-card {
   position: absolute;
-  background: #111;
+  background: rgba(17, 17, 17, 0.92);
   border: 1px solid #2a2a2a;
   border-radius: 1rem;
-  padding: 1rem;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+  padding: 0.875rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  backdrop-filter: blur(8px);
+  min-width: 160px;
 }
 
-.float-card-bl {
-  bottom: 1rem;
-  left: 1rem;
-}
-
-.float-card-tr {
-  top: 1rem;
-  right: 1rem;
-}
+.float-card-bl { bottom: 1.5rem; left: 1rem;  }
+.float-card-tr { top: 1.5rem;   right: 1rem; }
 
 .float-icon {
   font-size: 1.25rem;
-  margin-bottom: 0.25rem;
+  flex-shrink: 0;
 }
 
 .float-title {
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
+  color: #f0ede6;
 }
 
 .float-sub {
-  font-size: 0.75rem;
-  color: #a8a29e;
+  font-size: 0.7rem;
+  color: #888888;
+  margin-top: 2px;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .hero { gap: 2.5rem; }
+  .hero-right { height: 380px; }
 }
 
 @media (max-width: 768px) {
   .hero {
     grid-template-columns: 1fr;
-    gap: 3rem;
-    padding: 4rem 1rem;
+    gap: 2rem;
+    padding: 3rem 1.25rem 4rem;
   }
 
   .hero-right {
-    height: 300px;
+    height: 260px;
     order: -1;
   }
 
+  /* Hide float cards on mobile — too cluttered */
+  .float-card { display: none; }
+
+  .hero-heading { font-size: clamp(2rem, 8vw, 2.8rem); }
+
+  .hero-sub { font-size: 1rem; }
+
   .hero-actions {
-    flex-direction: column;
+    flex-direction: row;
+    gap: 0.75rem;
+  }
+
+  .btn-hero-primary,
+  .btn-hero-ghost {
+    flex: 1;
+    justify-content: center;
+    padding: 0.875rem 1rem;
+    font-size: 0.875rem;
   }
 
   .hero-stats {
-    gap: 1rem;
+    gap: 1.25rem;
   }
+
+  .stat-num { font-size: 1.25rem; }
+}
+
+@media (max-width: 380px) {
+  .hero-actions { flex-direction: column; }
+  .btn-hero-primary,
+  .btn-hero-ghost { width: 100%; }
 }
