@@ -1,0 +1,76 @@
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+
+.skeleton-card {
+  display: block;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: #111111;
+  pointer-events: none;
+}
+
+/* Base shimmer mixin applied to all skeleton elements */
+.skeleton-img,
+.skeleton-line,
+.skeleton-price,
+.skeleton-btn {
+  background: linear-gradient(
+    90deg,
+    #1a1a1a 25%,
+    #242424 50%,
+    #1a1a1a 75%
+  );
+  background-size: 600px 100%;
+  animation: shimmer 1.6s infinite linear;
+  border-radius: 6px;
+}
+
+/* Image placeholder — matches .food-img-wrap height */
+.skeleton-img {
+  height: 200px;
+  border-radius: 1rem;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* Body */
+.skeleton-body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeleton-line {
+  height: 13px;
+}
+
+.w-75 { width: 75%; }
+.w-50 { width: 50%; }
+.w-40 { width: 40%; }
+
+/* Footer row */
+.skeleton-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.skeleton-price {
+  width: 60px;
+  height: 20px;
+}
+
+.skeleton-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+@media (max-width: 480px) {
+  .skeleton-img { height: 180px; }
+  .skeleton-body { padding: 0.75rem; }
+}

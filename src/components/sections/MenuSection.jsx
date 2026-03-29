@@ -1,6 +1,10 @@
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import FoodCard from '../product/FoodCard';
+import SkeletonCard from '../product/SkeletonCard';
 import './MenuSection.css';
+
+const SKELETON_COUNT = 8;
 
 export default function MenuSection({
   categories,
@@ -11,7 +15,22 @@ export default function MenuSection({
   onSearch,
   onAddToCart,
 }) {
+  const [loading, setLoading] = useState(true);
   const allCategories = ['all', ...categories];
+
+  // Simulate initial load — 1.2s skeleton then real cards
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 1200);
+    return () => clearTimeout(t);
+  }, []);
+
+  // When category or search changes, flash skeleton briefly
+  useEffect(() => {
+    if (loading) return;
+    setLoading(true);
+    const t = setTimeout(() => setLoading(false), 500);
+    return () => clearTimeout(t);
+  }, [selectedCategory, searchQuery]);
 
   return (
     <section className="menu-section" id="menu">
@@ -48,46 +67,59 @@ export default function MenuSection({
         ))}
       </div>
 
-      {/* Empty state */}
-      {products.length === 0 && (
-        <div className="empty-state">
-          <p className="empty-state-icon">🍽️</p>
-          <p className="empty-state-title">No dishes found</p>
-          <p className="empty-state-sub">Try a different search or category</p>
-          <button className="empty-state-btn" onClick={() => onSearch('')}>
-            Clear search
-          </button>
+      {/* Skeleton grid */}
+      {loading && (
+        <div className="food-grid">
+          {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+            <SkeletonCard key={i} />
+          ))}
         </div>
       )}
 
-      {/* Product grid */}
-      <div className="food-grid">
-        <AnimatePresence mode="popLayout">
-          {products.map((product, i) => (
-            <motion.div
-              key={product.id}
-              layout
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ delay: i * 0.04, duration: 0.3 }}
-            >
-              <FoodCard
-                id={product.id}
-                name={product.name}
-                price={product.price}
-                image={product.image}
-                category={product.category}
-                rating={product.rating}
-                deliveryTime={product.deliveryTime}
-                restaurant={product.restaurant}
-                badge={product.badge}
-                onAdd={onAddToCart}
-              />
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
+      {/* Real grid */}
+      {!loading && (
+        <>
+          {products.length === 0 && (
+            <div className="empty-state">
+              <p className="empty-state-icon">🍽️</p>
+              <p className="empty-state-title">No dishes found</p>
+              <p className="empty-state-sub">Try a different search or category</p>
+              <button className="empty-state-btn" onClick={() => onSearch('')}>
+                Clear search
+              </button>
+            </div>
+          )}
+
+          <div className="food-grid">
+            <AnimatePresence mode="popLayout">
+              {products.map((product, i) => (
+                <motion.div
+                  key={product.id}
+                  layout
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ delay: i * 0.04, duration: 0.25 }}
+                >
+                  <FoodCard
+                    id={product.id}
+                    name={product.name}
+                    price={product.price}
+                    image={product.image}
+                    category={product.category}
+                    rating={product.rating}
+                    deliveryTime={product.deliveryTime}
+                    restaurant={product.restaurant}
+                    badge={product.badge}
+                    description={product.description}
+                    onAdd={onAddToCart}
+                  />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        </>
+      )}
     </section>
   );
 }
