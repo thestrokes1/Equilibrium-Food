@@ -13,6 +13,7 @@ const products = [
     deliveryTime: '18',
     restaurant: 'Burger Republic',
     badge: { type: 'sale', label: '20% OFF' },
+    description: 'Crispy on the outside, juicy on the inside. Served with our house sauce and fresh toppings.',
   },
   {
     id: 2,
@@ -23,6 +24,7 @@ const products = [
     rating: 4.7,
     deliveryTime: '22',
     restaurant: 'Pizza Palace',
+    description: 'Crispy on the outside, juicy on the inside. Served with our house sauce and fresh toppings.',
   },
   {
     id: 3,
@@ -34,6 +36,7 @@ const products = [
     deliveryTime: '30',
     restaurant: 'Sakura Sushi',
     badge: { type: 'new', label: 'NEW' },
+    description: 'Crispy on the outside, juicy on the inside. Served with our house sauce and fresh toppings.',
   },
   {
     id: 4,
@@ -44,6 +47,7 @@ const products = [
     rating: 4.6,
     deliveryTime: '15',
     restaurant: 'Green Garden',
+    description: 'Crispy on the outside, juicy on the inside. Served with our house sauce and fresh toppings.',
   },
   {
     id: 5,
@@ -55,6 +59,7 @@ const products = [
     deliveryTime: '20',
     restaurant: 'La Trattoria',
     badge: { type: 'popular', label: 'POPULAR' },
+    description: 'Crispy on the outside, juicy on the inside. Served with our house sauce and fresh toppings.',
   },
   {
     id: 6,
@@ -65,6 +70,7 @@ const products = [
     rating: 4.5,
     deliveryTime: '17',
     restaurant: 'Taco Libre',
+    description: 'Crispy on the outside, juicy on the inside. Served with our house sauce and fresh toppings.',
   },
   {
     id: 7,
@@ -75,6 +81,7 @@ const products = [
     rating: 4.9,
     deliveryTime: '35',
     restaurant: 'Smoke & Fire',
+    description: 'Crispy on the outside, juicy on the inside. Served with our house sauce and fresh toppings.',
   },
   {
     id: 8,
@@ -86,6 +93,7 @@ const products = [
     deliveryTime: '12',
     restaurant: 'Bloom Kitchen',
     badge: { type: 'new', label: 'NEW' },
+    description: 'Crispy on the outside, juicy on the inside. Served with our house sauce and fresh toppings.',
   },
 ];
 

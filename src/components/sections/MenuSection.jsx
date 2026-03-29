@@ -7,15 +7,32 @@ export default function MenuSection({
   products,
   selectedCategory,
   onSelectCategory,
+  searchQuery,
+  onSearch,
   onAddToCart,
 }) {
   const allCategories = ['all', ...categories];
 
   return (
-    <section className="menu-section">
+    <section className="menu-section" id="menu">
       <div className="section-head">
         <h2 className="section-title">Browse the menu</h2>
         <button className="see-all">See all →</button>
+      </div>
+
+      {/* Search bar */}
+      <div className="search-wrap">
+        <span className="search-icon">🔍</span>
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Search dishes or restaurants..."
+          value={searchQuery}
+          onChange={e => onSearch(e.target.value)}
+        />
+        {searchQuery && (
+          <button className="search-clear" onClick={() => onSearch('')}>✕</button>
+        )}
       </div>
 
       {/* Category pills */}
@@ -30,6 +47,18 @@ export default function MenuSection({
           </button>
         ))}
       </div>
+
+      {/* Empty state */}
+      {products.length === 0 && (
+        <div className="empty-state">
+          <p className="empty-state-icon">🍽️</p>
+          <p className="empty-state-title">No dishes found</p>
+          <p className="empty-state-sub">Try a different search or category</p>
+          <button className="empty-state-btn" onClick={() => onSearch('')}>
+            Clear search
+          </button>
+        </div>
+      )}
 
       {/* Product grid */}
       <div className="food-grid">

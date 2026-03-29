@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useCart } from '../../context/CartContext';
 import './Hero.css';
 
 const STATS = [
@@ -8,10 +9,16 @@ const STATS = [
   { num: '24/7',   label: 'Always open'   },
 ];
 
-const fadeLeft = { hidden: { opacity: 0, x: -40 }, show: { opacity: 1, x: 0 } };
-const fadeRight = { hidden: { opacity: 0, x: 40  }, show: { opacity: 1, x: 0 } };
+const fadeLeft  = { hidden: { opacity: 0, x: -40 }, show: { opacity: 1, x: 0 } };
+const fadeRight = { hidden: { opacity: 0, x:  40 }, show: { opacity: 1, x: 0 } };
 
 export default function Hero() {
+  const { setIsOpen } = useCart();
+
+  const scrollToMenu = () => {
+    document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <section className="hero">
 
@@ -38,10 +45,21 @@ export default function Hero() {
         </p>
 
         <div className="hero-actions">
-          <button className="btn-hero-primary">Order now</button>
-          <button className="btn-hero-ghost">
-            <span className="play-icon">▶</span> How it works
-          </button>
+          <motion.button
+            className="btn-hero-primary"
+            onClick={scrollToMenu}
+            whileTap={{ scale: 0.97 }}
+            whileHover={{ scale: 1.03 }}
+          >
+            Order now
+          </motion.button>
+          <motion.button
+            className="btn-hero-ghost"
+            onClick={() => setIsOpen(true)}
+            whileTap={{ scale: 0.97 }}
+          >
+            <span className="play-icon">🛒</span> View cart
+          </motion.button>
         </div>
 
         <div className="hero-stats">
@@ -77,7 +95,6 @@ export default function Hero() {
           />
         </div>
 
-        {/* Floating cards */}
         <motion.div
           className="float-card float-card-bl"
           initial={{ opacity: 0, y: 12 }}
