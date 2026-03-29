@@ -12,16 +12,19 @@ export default function TopBar() {
 
   return (
     <div className="topbar">
-      <div className="topbar-left">
-        <span className="topbar-dot" />
-        Resistencia · Free delivery over $25
-      </div>
 
+      {/* LEFT — promo ticker, takes all remaining space */}
       <div className="ticker-wrap" aria-hidden="true">
         <div className="ticker">{ticker}&nbsp;&nbsp;&nbsp;&nbsp;{ticker}</div>
       </div>
 
-      <button className="topbar-right">Change location →</button>
+      {/* RIGHT — location always visible, shrinks on mobile */}
+      <button className="topbar-location">
+        <span className="topbar-dot" />
+        <span className="location-full">Resistencia · Free delivery over $25</span>
+        <span className="location-short">Resistencia</span>
+      </button>
+
     </div>
   );
 }
