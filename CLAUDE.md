@@ -326,3 +326,95 @@ npm run preview      # Previsualizar build
 
 *Plan v2.0 — Fecha: 2026-04-13*
 *Stack: React 18 + TypeScript + Supabase + Vercel*
+
+---
+
+## PLAN v3.0 — Mejoras pendientes (próximos pasos)
+
+> Estado actual: app funcional y desplegada. Google OAuth requiere config manual.
+> Bugs conocidos resueltos en v2.1: modal de producto usa createPortal (fix transform stacking context).
+
+---
+
+### BLOQUE H — Google OAuth (configuración manual requerida)
+
+**El código ya está correcto** (`signInWithGoogle` en AuthContext.tsx). Falta solo configuración:
+
+- [ ] H1 · Supabase Dashboard → Authentication → Providers → Google → **Enable**
+  - Callback URL que Supabase muestra: `https://rzevfdpsozjrdqixxiex.supabase.co/auth/v1/callback`
+- [ ] H2 · Google Console (`console.cloud.google.com`) → APIs & Services → Credentials → Create OAuth 2.0 Client ID
+  - Application type: **Web application**
+  - Authorized redirect URIs: `https://rzevfdpsozjrdqixxiex.supabase.co/auth/v1/callback`
+  - Authorized JavaScript origins: `https://equilibrium-food.vercel.app`
+- [ ] H3 · Copiar **Client ID** y **Client Secret** de Google Console → pegar en Supabase Google provider settings → Save
+- [ ] H4 · Verificar login con Google en producción
+
+---
+
+### BLOQUE I — UX & Features pendientes
+
+- [ ] I1 · **Página de confirmación de orden**: mejorar OrderDetail con opción de "descargar/imprimir ticket" (window.print() + CSS @media print)
+- [ ] I2 · **Filtros de precio y rating** en MenuSection (slider de precio, orden por rating)
+- [ ] I3 · **Paginación o infinite scroll** en el menú (actualmente carga todos los items)
+- [ ] I4 · **Restaurantes page**: `/restaurants` con listado de restaurantes y su menú individual
+- [ ] I5 · **Favoritos**: guardar items favoritos en `eq_favorites` (tabla nueva, user_id + menu_item_id)
+- [ ] I6 · **Tracking en tiempo real**: actualización de status de orden sin recargar (Supabase Realtime subscriptions)
+- [ ] I7 · **Re-order**: botón en OrderDetail para volver a añadir los mismos items al carrito
+
+---
+
+### BLOQUE J — Auth & Onboarding
+
+- [ ] J1 · **Email confirmation flow**: actualmente Supabase envía email de confirmación. Considerar deshabilitar para demo o añadir página "check your email"
+- [ ] J2 · **Forgot password**: página `/auth/forgot-password` con `supabase.auth.resetPasswordForEmail()`
+- [ ] J3 · **Password reset**: página `/auth/reset-password` para el callback de reset (con `supabase.auth.updateUser()`)
+- [ ] J4 · **Redirect after login**: si el usuario llegó desde `/checkout`, redirigir de vuelta al checkout después de login (ya parcialmente implementado con `location.state.from`)
+
+---
+
+### BLOQUE K — Calidad & Performance
+
+- [ ] K1 · **Más tests**: añadir tests de integración para Checkout, Orders, y AuthContext
+- [ ] K2 · **Error boundaries** por ruta (actualmente solo uno global en main.tsx)
+- [ ] K3 · **Image optimization**: usar WebP o lazy-loading mejorado con `IntersectionObserver`
+- [ ] K4 · **SEO dinámico**: meta tags por página con react-helmet-async (OpenGraph para redes sociales)
+- [ ] K5 · **Toast de error global**: manejar errores de red en productService y mostrar toast
+- [ ] K6 · **Skeleton en Profile y Orders**: actualmente muestran estado vacío sin skeleton durante carga
+
+---
+
+### BLOQUE L — Admin Panel (futuro)
+
+- [ ] L1 · Ruta `/admin` protegida por `role = 'admin'`
+- [ ] L2 · CRUD de restaurantes y menu items desde UI
+- [ ] L3 · Vista de todas las órdenes con filtros de status y cambio de estado
+- [ ] L4 · Dashboard con métricas (órdenes por día, revenue, items más vendidos)
+
+---
+
+## BUGS CONOCIDOS / FIXES APLICADOS (v2.1)
+
+| Bug | Causa | Fix |
+|---|---|---|
+| Clic en card no abría modal | `motion.div layout` crea transform stacking context, `position:fixed` relativo al contenedor | `createPortal(modal, document.body)` en ProductModal.tsx |
+| Google OAuth no funciona | Falta configuración en Supabase + Google Console | Ver Bloque H arriba |
+| Peer deps en Vercel build | `@eslint/js@10` + `eslint@9` conflicto | `.npmrc` con `legacy-peer-deps=true` |
+
+---
+
+## ESTADO DE BASE DE DATOS (post v2.0)
+
+| Migración | Descripción | Estado |
+|---|---|---|
+| 001_create_tables | Tablas principales + índices + triggers | ✅ Aplicada |
+| 002_rls_policies | Políticas RLS iniciales | ✅ Aplicada |
+| 003_auto_profile_trigger | Trigger auto-create profile en signup | ✅ Aplicada |
+| 004_seed_data | 8 restaurantes + 8 menu items | ✅ Aplicada |
+| 005_rls_performance_fixes | search_path en set_updated_at + índice menu_item_id | ✅ Aplicada |
+| 006_rls_unified_policies | Políticas unificadas sin overlap, auth.uid() optimizado | ✅ Aplicada |
+
+**Advisor status**: 0 security issues · 0 performance warnings · INFO unused indexes (esperados en DB nueva)
+
+---
+
+*Plan v3.0 — Fecha: 2026-04-13*

@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useCallback, useRef } from 'react';
 import { useCart } from '@/context/CartContext';
@@ -31,7 +32,9 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
     }, 1000);
   };
 
-  return (
+  // Render into document.body via portal so position:fixed is relative
+  // to the viewport, not any transformed Framer Motion ancestor.
+  return createPortal(
     <AnimatePresence>
       {/* Backdrop and panel are siblings so aria-hidden on backdrop
           doesn't suppress the dialog from the accessibility tree */}
@@ -133,6 +136,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
           </div>
         </motion.div>
       </>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
