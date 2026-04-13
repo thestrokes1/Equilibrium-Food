@@ -45,8 +45,8 @@ npm run build
 ### I — UX Features
 - [x] I1 · Print ticket: `window.print()` + `@media print` CSS en OrderDetail
 - [x] I2 · Filtros precio/rating en MenuSection — sort select: default/top rated/price↑/price↓
-- [ ] I3 · Infinite scroll o paginación en menú
-- [ ] I4 · Página `/restaurants` con listado y menú individual
+- [x] I3 · Load-more pagination en MenuSection (PAGE_SIZE=8, reset on filter/sort change)
+- [x] I4 · `/restaurants` list + `/restaurants/:slug` detail con hero + menu grid
 - [ ] I5 · Favoritos: tabla `eq_favorites` (user_id + menu_item_id)
 - [ ] I6 · Realtime order tracking (Supabase subscriptions)
 - [x] I7 · Re-order: botón en OrderDetail para re-añadir items al cart
@@ -59,9 +59,9 @@ npm run build
 
 ### K — Calidad
 - [ ] K1 · Tests de integración: Checkout, Orders, AuthContext
-- [ ] K2 · Error boundaries por ruta
+- [x] K2 · Error boundaries por ruta — `Bounded` wrapper con path key en App.tsx
 - [ ] K3 · Image optimization: WebP / IntersectionObserver
-- [ ] K4 · SEO dinámico con react-helmet-async (OpenGraph)
+- [x] K4 · SEO — `Seo.tsx` (document.title + meta description, sin dep extra)
 - [x] K5 · Toast de error global — productService throws on network error, Home.tsx catches + toast
 - [x] K6 · Skeleton en Profile y Orders durante carga (addr skeleton en Profile, list skeleton en Orders)
 
