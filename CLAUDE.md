@@ -43,18 +43,18 @@ npm run build
 - [ ] H4 · Verificar en producción
 
 ### I — UX Features
-- [ ] I1 · Print ticket: `window.print()` + `@media print` CSS en OrderDetail
+- [x] I1 · Print ticket: `window.print()` + `@media print` CSS en OrderDetail
 - [ ] I2 · Filtros precio/rating en MenuSection
 - [ ] I3 · Infinite scroll o paginación en menú
 - [ ] I4 · Página `/restaurants` con listado y menú individual
 - [ ] I5 · Favoritos: tabla `eq_favorites` (user_id + menu_item_id)
 - [ ] I6 · Realtime order tracking (Supabase subscriptions)
-- [ ] I7 · Re-order: botón en OrderDetail para re-añadir items al cart
+- [x] I7 · Re-order: botón en OrderDetail para re-añadir items al cart
 
 ### J — Auth & Onboarding
 - [ ] J1 · Email confirmation: deshabilitar para demo O página "check your email"
-- [ ] J2 · Forgot password: `/auth/forgot-password` con `supabase.auth.resetPasswordForEmail()`
-- [ ] J3 · Reset password: `/auth/reset-password` callback con `supabase.auth.updateUser()`
+- [x] J2 · Forgot password: `/auth/forgot-password` con `supabase.auth.resetPasswordForEmail()`
+- [x] J3 · Reset password: `/auth/reset-password` callback con `supabase.auth.updateUser()`
 - [ ] J4 · Redirect post-login a `/checkout` si venía de ahí (parcial: `location.state.from`)
 
 ### K — Calidad
