@@ -92,6 +92,12 @@ export default function Login() {
           </button>
         </form>
 
+        <div className="auth-forgot-wrap">
+          <Link to="/auth/forgot-password" className="auth-forgot-link">
+            Forgot your password?
+          </Link>
+        </div>
+
         <div className="auth-divider">
           <span>or</span>
         </div>

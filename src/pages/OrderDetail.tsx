@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
+import { useCart } from '@/context/CartContext';
+import { useToast } from '@/context/ToastContext';
 import { supabase } from '@/lib/supabase';
-import type { DbOrder, DbOrderItem } from '@/types/product';
+import type { DbOrder, DbOrderItem, Product } from '@/types/product';
 import './Orders.css';
 
 const STEPS = [
@@ -21,10 +23,30 @@ function getStepIndex(status: string) {
 export default function OrderDetail() {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
+  const { addItem, setIsOpen } = useCart();
+  const { addToast } = useToast();
   const [order, setOrder] = useState<DbOrder | null>(null);
   const [items, setItems] = useState<DbOrderItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+
+  const handleReorder = () => {
+    items.forEach((item) => {
+      const product: Product = {
+        id: item.menu_item_id ?? item.id,
+        name: item.item_name,
+        price: item.unit_price,
+        image: item.item_image ?? '',
+        category: '',
+        rating: 0,
+        deliveryTime: '',
+        restaurant: '',
+      };
+      addItem(product, item.qty);
+    });
+    setIsOpen(true);
+    addToast({ title: 'Items added to cart', icon: '🛒', type: 'success' });
+  };
 
   useEffect(() => {
     if (!user || !id) return;
@@ -72,9 +94,26 @@ export default function OrderDetail() {
   return (
     <div className="orders-page">
       <div className="orders-container">
-        <Link to="/orders" className="order-back-link">
-          ← All orders
-        </Link>
+        <div className="order-detail-nav">
+          <Link to="/orders" className="order-back-link">
+            ← All orders
+          </Link>
+          <div className="order-detail-actions">
+            <button
+              className="order-action-btn"
+              onClick={handleReorder}
+              disabled={items.length === 0}
+            >
+              🔁 Re-order
+            </button>
+            <button
+              className="order-action-btn order-action-btn--print"
+              onClick={() => window.print()}
+            >
+              🖨️ Print ticket
+            </button>
+          </div>
+        </div>
 
         <motion.div
           className="order-detail-card"

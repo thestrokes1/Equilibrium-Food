@@ -125,6 +125,8 @@ export interface AuthContextValue {
   signOut: () => Promise<void>;
   signInWithGoogle: () => Promise<{ error: string | null }>;
   refreshProfile: () => Promise<void>;
+  resetPasswordForEmail: (email: string) => Promise<{ error: string | null }>;
+  updatePassword: (newPassword: string) => Promise<{ error: string | null }>;
 }
 
 // ─── Cart ────────────────────────────────────────────────────────────────────

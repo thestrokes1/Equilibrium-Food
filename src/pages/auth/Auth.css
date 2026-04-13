@@ -133,6 +133,22 @@
   cursor: not-allowed;
 }
 
+.auth-forgot-wrap {
+  text-align: right;
+  margin-top: 0.5rem;
+}
+
+.auth-forgot-link {
+  color: #6b6b6b;
+  font-size: 0.8rem;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.auth-forgot-link:hover {
+  color: #f59e0b;
+}
+
 .auth-divider {
   display: flex;
   align-items: center;

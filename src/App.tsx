@@ -9,6 +9,8 @@ const Home = lazy(() => import('@/pages/Home'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
 const Login = lazy(() => import('@/pages/auth/Login'));
 const Register = lazy(() => import('@/pages/auth/Register'));
+const ForgotPassword = lazy(() => import('@/pages/auth/ForgotPassword'));
+const ResetPassword = lazy(() => import('@/pages/auth/ResetPassword'));
 const Checkout = lazy(() => import('@/pages/Checkout'));
 const Orders = lazy(() => import('@/pages/Orders'));
 const OrderDetail = lazy(() => import('@/pages/OrderDetail'));
@@ -71,6 +73,9 @@ export default function App() {
               </GuestGuard>
             }
           />
+          <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+          {/* /auth/reset-password receives the Supabase token via URL hash — must not be guest-guarded */}
+          <Route path="/auth/reset-password" element={<ResetPassword />} />
 
           {/* Protected routes */}
           <Route
