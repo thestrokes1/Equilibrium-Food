@@ -26,8 +26,13 @@ export async function getProducts(): Promise<Product[]> {
     .eq('is_available', true)
     .order('sort_order');
 
-  if (error || !data || data.length === 0) {
-    // Fallback to local data if DB is empty or unreachable
+  if (error) {
+    // Real network / auth error — let caller handle it
+    throw new Error(error.message);
+  }
+
+  if (!data || data.length === 0) {
+    // DB is empty (fresh project) — silently fall back to local seed
     return localProducts;
   }
 

@@ -3,8 +3,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import FoodCard from '../product/FoodCard';
 import SkeletonCard from '../product/SkeletonCard';
 import { SKELETON_COUNT, SKELETON_LOADING_MS } from '@/constants';
-import type { MenuSectionProps } from '@/types/product';
+import type { MenuSectionProps, SortOption } from '@/types/product';
 import './MenuSection.css';
+
+const SORT_LABELS: { value: SortOption; label: string }[] = [
+  { value: 'default', label: 'Default' },
+  { value: 'rating_desc', label: '⭐ Top rated' },
+  { value: 'price_asc', label: '💰 Price: low → high' },
+  { value: 'price_desc', label: '💎 Price: high → low' },
+];
 
 export default function MenuSection({
   categories,
@@ -13,6 +20,8 @@ export default function MenuSection({
   onSelectCategory,
   searchQuery,
   onSearch,
+  sortOption,
+  onSort,
   onAddToCart,
   initialLoading = false,
 }: MenuSectionProps) {
@@ -50,17 +59,31 @@ export default function MenuSection({
         )}
       </div>
 
-      {/* Category pills */}
-      <div className="cat-row">
-        {allCategories.map((cat) => (
-          <button
-            key={cat}
-            className={`cat-pill ${selectedCategory === cat ? 'active' : ''}`}
-            onClick={() => onSelectCategory(cat)}
-          >
-            {cat.charAt(0).toUpperCase() + cat.slice(1)}
-          </button>
-        ))}
+      {/* Sort + filter row */}
+      <div className="menu-controls">
+        <div className="cat-row">
+          {allCategories.map((cat) => (
+            <button
+              key={cat}
+              className={`cat-pill ${selectedCategory === cat ? 'active' : ''}`}
+              onClick={() => onSelectCategory(cat)}
+            >
+              {cat.charAt(0).toUpperCase() + cat.slice(1)}
+            </button>
+          ))}
+        </div>
+        <select
+          className="sort-select"
+          value={sortOption}
+          onChange={(e) => onSort(e.target.value as SortOption)}
+          aria-label="Sort menu items"
+        >
+          {SORT_LABELS.map(({ value, label }) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Skeleton grid */}

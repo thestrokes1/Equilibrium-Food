@@ -178,6 +178,8 @@ export interface FoodCardProps extends Product {
   onAdd: (product: Product) => void;
 }
 
+export type SortOption = 'default' | 'rating_desc' | 'price_asc' | 'price_desc';
+
 export interface MenuSectionProps {
   categories: string[];
   products: Product[];
@@ -185,6 +187,8 @@ export interface MenuSectionProps {
   onSelectCategory: (category: string) => void;
   searchQuery: string;
   onSearch: (query: string) => void;
+  sortOption: SortOption;
+  onSort: (option: SortOption) => void;
   onAddToCart: (product: Product, qty?: number) => void;
   initialLoading?: boolean;
 }
