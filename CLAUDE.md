@@ -44,7 +44,7 @@ npm run build
 
 ### I — UX Features
 - [x] I1 · Print ticket: `window.print()` + `@media print` CSS en OrderDetail
-- [ ] I2 · Filtros precio/rating en MenuSection
+- [x] I2 · Filtros precio/rating en MenuSection — sort select: default/top rated/price↑/price↓
 - [ ] I3 · Infinite scroll o paginación en menú
 - [ ] I4 · Página `/restaurants` con listado y menú individual
 - [ ] I5 · Favoritos: tabla `eq_favorites` (user_id + menu_item_id)
@@ -52,18 +52,18 @@ npm run build
 - [x] I7 · Re-order: botón en OrderDetail para re-añadir items al cart
 
 ### J — Auth & Onboarding
-- [ ] J1 · Email confirmation: deshabilitar para demo O página "check your email"
+- [x] J1 · Email confirmation: página "Check your email" en Register.tsx (ya implementado)
 - [x] J2 · Forgot password: `/auth/forgot-password` con `supabase.auth.resetPasswordForEmail()`
 - [x] J3 · Reset password: `/auth/reset-password` callback con `supabase.auth.updateUser()`
-- [ ] J4 · Redirect post-login a `/checkout` si venía de ahí (parcial: `location.state.from`)
+- [x] J4 · Redirect post-login a `/checkout` — via `AuthGuard` → `state={{ from: location }}` → Login navega a `from.pathname`
 
 ### K — Calidad
 - [ ] K1 · Tests de integración: Checkout, Orders, AuthContext
 - [ ] K2 · Error boundaries por ruta
 - [ ] K3 · Image optimization: WebP / IntersectionObserver
 - [ ] K4 · SEO dinámico con react-helmet-async (OpenGraph)
-- [ ] K5 · Toast de error global para fallos de red en productService
-- [ ] K6 · Skeleton en Profile y Orders durante carga
+- [x] K5 · Toast de error global — productService throws on network error, Home.tsx catches + toast
+- [x] K6 · Skeleton en Profile y Orders durante carga (addr skeleton en Profile, list skeleton en Orders)
 
 ### L — Admin Panel (futuro)
 - [ ] L1 · Ruta `/admin` protegida por `role = 'admin'`
