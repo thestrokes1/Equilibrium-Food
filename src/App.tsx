@@ -2,6 +2,7 @@ import { lazy, Suspense, type ReactNode } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import AuthGuard from '@/components/ui/AuthGuard';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import CartDrawer from '@/components/cart/CartDrawer';
 
 // Code-split all pages
@@ -15,6 +16,8 @@ const Checkout = lazy(() => import('@/pages/Checkout'));
 const Orders = lazy(() => import('@/pages/Orders'));
 const OrderDetail = lazy(() => import('@/pages/OrderDetail'));
 const Profile = lazy(() => import('@/pages/Profile'));
+const Restaurants = lazy(() => import('@/pages/Restaurants'));
+const RestaurantDetail = lazy(() => import('@/pages/RestaurantDetail'));
 
 function PageLoader() {
   return (
@@ -49,65 +52,121 @@ function GuestGuard({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
 
+/** Wraps a route element in an ErrorBoundary keyed to its path,
+ *  so crashes are isolated per route and reset on navigation. */
+function Bounded({ path, children }: { path: string; children: ReactNode }) {
+  return <ErrorBoundary key={path}>{children}</ErrorBoundary>;
+}
+
 export default function App() {
   return (
     <>
       <Suspense fallback={<PageLoader />}>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={
+              <Bounded path="/">
+                <Home />
+              </Bounded>
+            }
+          />
 
           {/* Auth routes — redirect to / if already logged in */}
           <Route
             path="/auth/login"
             element={
-              <GuestGuard>
-                <Login />
-              </GuestGuard>
+              <Bounded path="/auth/login">
+                <GuestGuard>
+                  <Login />
+                </GuestGuard>
+              </Bounded>
             }
           />
           <Route
             path="/auth/register"
             element={
-              <GuestGuard>
-                <Register />
-              </GuestGuard>
+              <Bounded path="/auth/register">
+                <GuestGuard>
+                  <Register />
+                </GuestGuard>
+              </Bounded>
             }
           />
-          <Route path="/auth/forgot-password" element={<ForgotPassword />} />
-          {/* /auth/reset-password receives the Supabase token via URL hash — must not be guest-guarded */}
-          <Route path="/auth/reset-password" element={<ResetPassword />} />
+          <Route
+            path="/auth/forgot-password"
+            element={
+              <Bounded path="/auth/forgot-password">
+                <ForgotPassword />
+              </Bounded>
+            }
+          />
+          <Route
+            path="/auth/reset-password"
+            element={
+              <Bounded path="/auth/reset-password">
+                <ResetPassword />
+              </Bounded>
+            }
+          />
+
+          {/* Restaurants */}
+          <Route
+            path="/restaurants"
+            element={
+              <Bounded path="/restaurants">
+                <Restaurants />
+              </Bounded>
+            }
+          />
+          <Route
+            path="/restaurants/:slug"
+            element={
+              <Bounded path="/restaurants/:slug">
+                <RestaurantDetail />
+              </Bounded>
+            }
+          />
 
           {/* Protected routes */}
           <Route
             path="/checkout"
             element={
-              <AuthGuard>
-                <Checkout />
-              </AuthGuard>
+              <Bounded path="/checkout">
+                <AuthGuard>
+                  <Checkout />
+                </AuthGuard>
+              </Bounded>
             }
           />
           <Route
             path="/orders"
             element={
-              <AuthGuard>
-                <Orders />
-              </AuthGuard>
+              <Bounded path="/orders">
+                <AuthGuard>
+                  <Orders />
+                </AuthGuard>
+              </Bounded>
             }
           />
           <Route
             path="/orders/:id"
             element={
-              <AuthGuard>
-                <OrderDetail />
-              </AuthGuard>
+              <Bounded path="/orders/:id">
+                <AuthGuard>
+                  <OrderDetail />
+                </AuthGuard>
+              </Bounded>
             }
           />
           <Route
             path="/profile"
             element={
-              <AuthGuard>
-                <Profile />
-              </AuthGuard>
+              <Bounded path="/profile">
+                <AuthGuard>
+                  <Profile />
+                </AuthGuard>
+              </Bounded>
             }
           />
 

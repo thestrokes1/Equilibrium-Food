@@ -8,12 +8,13 @@ import './Navbar.css';
 interface NavLink {
   label: string;
   href: string | null;
+  internal?: boolean; // true = use <Link>, false/undefined = use <a>
   soon: boolean;
 }
 
 const NAV_LINKS: NavLink[] = [
   { label: 'Menu', href: '#menu', soon: false },
-  { label: 'Restaurants', href: null, soon: true },
+  { label: 'Restaurants', href: '/restaurants', internal: true, soon: false },
   { label: 'Deals', href: '#deals', soon: false },
   { label: 'Track order', href: null, soon: true },
 ];
@@ -55,6 +56,10 @@ export default function Navbar() {
                   {link.label}
                   <span className="nav-soon-badge">Soon</span>
                 </span>
+              ) : link.internal ? (
+                <Link to={link.href!} className="nav-link">
+                  {link.label}
+                </Link>
               ) : (
                 <a href={link.href ?? '#'} className="nav-link">
                   {link.label}
@@ -152,16 +157,27 @@ export default function Navbar() {
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
           >
-            {NAV_LINKS.map((link) => (
-              <a
-                key={link.label}
-                href={link.href ?? '#'}
-                className="mobile-link"
-                onClick={() => setMobileOpen(false)}
-              >
-                {link.label}
-              </a>
-            ))}
+            {NAV_LINKS.map((link) =>
+              link.soon ? null : link.internal ? (
+                <Link
+                  key={link.label}
+                  to={link.href!}
+                  className="mobile-link"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a
+                  key={link.label}
+                  href={link.href ?? '#'}
+                  className="mobile-link"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {link.label}
+                </a>
+              )
+            )}
             {user && (
               <>
                 <Link to="/orders" className="mobile-link" onClick={() => setMobileOpen(false)}>

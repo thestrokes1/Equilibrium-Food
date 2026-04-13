@@ -6,6 +6,8 @@ import { SKELETON_COUNT, SKELETON_LOADING_MS } from '@/constants';
 import type { MenuSectionProps, SortOption } from '@/types/product';
 import './MenuSection.css';
 
+const PAGE_SIZE = 8;
+
 const SORT_LABELS: { value: SortOption; label: string }[] = [
   { value: 'default', label: 'Default' },
   { value: 'rating_desc', label: '⭐ Top rated' },
@@ -26,6 +28,7 @@ export default function MenuSection({
   initialLoading = false,
 }: MenuSectionProps) {
   const [skeletonLoading, setSkeletonLoading] = useState(true);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const loading = initialLoading || skeletonLoading;
   const allCategories = ['all', ...categories];
 
@@ -33,6 +36,14 @@ export default function MenuSection({
     const t = setTimeout(() => setSkeletonLoading(false), SKELETON_LOADING_MS);
     return () => clearTimeout(t);
   }, []);
+
+  // Reset pagination when filter/sort changes
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [products]);
+
+  const visibleProducts = products.slice(0, visibleCount);
+  const hasMore = visibleCount < products.length;
 
   return (
     <section className="menu-section" id="menu">
@@ -111,7 +122,7 @@ export default function MenuSection({
 
           <div className="food-grid">
             <AnimatePresence mode="popLayout">
-              {products.map((product, i) => (
+              {visibleProducts.map((product, i) => (
                 <motion.div
                   key={product.id}
                   layout
@@ -137,6 +148,17 @@ export default function MenuSection({
               ))}
             </AnimatePresence>
           </div>
+
+          {hasMore && (
+            <div className="load-more-wrap">
+              <button
+                className="load-more-btn"
+                onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+              >
+                Load more ({products.length - visibleCount} remaining)
+              </button>
+            </div>
+          )}
         </>
       )}
     </section>

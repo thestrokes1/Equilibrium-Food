@@ -7,6 +7,7 @@ import Hero from '@/components/sections/Hero';
 import MenuSection from '@/components/sections/MenuSection';
 import DealsSection from '@/components/sections/DealsSection';
 import Footer from '@/components/layout/Footer';
+import Seo from '@/components/ui/Seo';
 import { getProducts } from '@/services/productService';
 import type { Product, SortOption } from '@/types/product';
 
@@ -56,6 +57,7 @@ export default function Home() {
 
   return (
     <div className="page-root">
+      <Seo />
       <TopBar />
       <Navbar />
       <main>

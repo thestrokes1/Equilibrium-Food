@@ -214,6 +214,32 @@
   gap: 1.5rem;
 }
 
+/* ── LOAD MORE ── */
+.load-more-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 2.5rem;
+}
+
+.load-more-btn {
+  background: transparent;
+  border: 1px solid #2e2e2e;
+  border-radius: 2rem;
+  color: #a3a3a3;
+  font-size: 0.875rem;
+  font-family: 'Outfit', sans-serif;
+  padding: 0.75rem 2rem;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
+}
+
+.load-more-btn:hover {
+  border-color: #22c55e;
+  color: #22c55e;
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   .menu-section {
