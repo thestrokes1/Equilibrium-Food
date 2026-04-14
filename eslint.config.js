@@ -49,6 +49,14 @@ export default [
     },
   },
 
+  // Service worker — needs ServiceWorkerGlobalScope globals (clients, self, etc.)
+  {
+    files: ['public/sw.js'],
+    languageOptions: {
+      globals: { ...globals.browser, ...globals.serviceworker },
+    },
+  },
+
   // TSX files — TypeScript parser
   {
     files: ['**/*.tsx'],

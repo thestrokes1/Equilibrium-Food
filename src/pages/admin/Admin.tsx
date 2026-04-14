@@ -189,6 +189,14 @@ export default function Admin() {
     await supabase.from('orders').update({ status }).eq('id', orderId);
     setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status } : o)));
     setUpdatingOrder(null);
+
+    // Fire-and-forget push notification to the order's customer
+    const order = orders.find((o) => o.id === orderId);
+    if (order?.user_id) {
+      supabase.functions
+        .invoke('push-notify', { body: { userId: order.user_id, orderId, status } })
+        .catch(() => {});
+    }
   };
 
   // ── Toggle availability ────────────────────────────────────────────────────

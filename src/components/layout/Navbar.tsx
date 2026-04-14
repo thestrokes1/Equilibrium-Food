@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
+import { useNotifications } from '@/hooks/useNotifications';
 import './Navbar.css';
 
 interface NavLink {
@@ -25,6 +26,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const { supported: notifSupported, subscribed, subscribe, unsubscribe } = useNotifications();
 
   const handleSignOut = async () => {
     setUserMenuOpen(false);
@@ -78,6 +80,19 @@ export default function Navbar() {
             <span>Cart</span>
             <span className={`cart-badge ${totalItems > 0 ? 'has-items' : ''}`}>{totalItems}</span>
           </button>
+
+          {user && notifSupported && (
+            <button
+              className={`nav-bell ${subscribed ? 'active' : ''}`}
+              onClick={subscribed ? unsubscribe : subscribe}
+              aria-label={
+                subscribed ? 'Turn off order notifications' : 'Turn on order notifications'
+              }
+              title={subscribed ? 'Notifications on' : 'Enable notifications'}
+            >
+              {subscribed ? '🔔' : '🔕'}
+            </button>
+          )}
 
           {user ? (
             <div className="nav-user-wrap">

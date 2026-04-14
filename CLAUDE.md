@@ -35,10 +35,15 @@ npm run build
 - **Tests**: vitest `pool: 'forks'`, `maxForks: 2` evita OOM de jsdom. `vi.hoisted()` para mocks con hoisting. `vi.unmock()` para override de setup.js en archivos específicos.
 - **Migrations**: 001 tablas · 002 RLS · 003 trigger auto-profile · 004 seed · 005 RLS perf · 006 RLS unified · 007 favorites · 008 storage bucket
 - **Storage**: bucket `images` (public). Upload via `src/lib/uploadImage.ts`. Transform/WebP via `src/lib/imageUrl.ts` → `transformImageUrl(url, {width, quality})`. `ImageUploadField` component: file picker + URL fallback + thumbnail preview.
+- **Push notifications**: VAPID keys generated (public key in `.env.local` + Vercel, private key in Supabase secret N1). Service worker at `public/sw.js`. Subscription hook `useNotifications` stores endpoint+keys in `push_subscriptions` table. Bell button in Navbar for logged-in users. Admin order status change fires `supabase.functions.invoke('push-notify')`. Edge Function `push-notify` deployed.
 
 ---
 
 ## PRÓXIMOS PASOS
+
+### N — Pasos manuales pendientes
+- [ ] N1 · Supabase Dashboard → Edge Functions → push-notify → Secrets → `VAPID_PRIVATE_KEY=VAPID_PRIVATE_KEY_REDACTED`
+- [ ] N2 · Vercel → Project → Settings → Env Vars → `VITE_VAPID_PUBLIC_KEY=VAPID_PUBLIC_KEY_REDACTED` (all envs)
 
 ### H — Google OAuth (solo config manual, código listo)
 - [ ] H1 · Supabase Dashboard → Auth → Providers → Google → Enable. Callback: `https://rzevfdpsozjrdqixxiex.supabase.co/auth/v1/callback`
@@ -64,7 +69,7 @@ npm run build
 - [x] M2 · Supabase Storage bucket `images` (5 MB, WebP/PNG/JPEG/AVIF) · RLS admin write + public read · `uploadImage()` helper · `transformImageUrl()` render API · `ImageUploadField` en admin menu + restaurants modals · 8 migraciones
 - [x] M3 · Infinite scroll en /restaurants con IntersectionObserver (PAGE_SIZE 6)
 - [x] M4 · Realtime en admin restaurants tab (auto-refresh si otro admin edita)
-- [ ] M5 · Notificaciones push (Supabase Webhooks → Edge Function → Web Push API)
+- [x] M5 · Notificaciones push (Web Push API + VAPID + Edge Function push-notify + SW + bell en navbar)
 - [x] M6 · Página de perfil con historial de favoritos + quick-add al carrito
 
 ---
