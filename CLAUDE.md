@@ -30,8 +30,8 @@ npm run build
 - **Auth**: `AuthContext` → `supabase.auth` · `AuthGuard` / `AdminGuard` para rutas protegidas
 - **Cart**: localStorage key `'cart'`. Checkout requiere login → redirect post-login.
 - **Favorites**: `FavoritesContext` — optimistic updates, NOOP seguro fuera del provider (no throw).
-- **LazyImage**: IntersectionObserver (rootMargin 200px) + fade-in, placeholder data URI, drop-in `<img>`.
-- **Modal fix**: `createPortal(modal, document.body)` en `ProductModal.tsx`.
+- **LazyImage**: IntersectionObserver (rootMargin 200px) + fade-in, placeholder data URI, drop-in `<img>`. `realSrcSet` ref para detección fiable de onLoad; checks `el.complete` para imágenes cacheadas.
+- **Modal fix**: `createPortal(modal, document.body)` en `ProductModal.tsx`. `AnimatePresence` en `FoodCard` (fuera del portal) para animación enter/exit correcta.
 - **Tests**: vitest `pool: 'forks'`, `maxForks: 2` evita OOM de jsdom. `vi.hoisted()` para mocks con hoisting. `vi.unmock()` para override de setup.js en archivos específicos.
 - **Migrations**: 001 tablas · 002 RLS · 003 trigger auto-profile · 004 seed · 005 RLS perf · 006 RLS unified · 007 favorites
 
@@ -55,6 +55,8 @@ npm run build
 - Error boundaries por ruta · SEO · Toast de error · Skeletons
 - LazyImage con IntersectionObserver en FoodCard
 - 52 tests en 7 archivos (CartContext, FoodCard, cart-flow, Toast, auth-context, checkout-validation, favorites-context)
+- Fix: LazyImage images invisible (ref-based onLoad, cached-image check, opacity en CSS transition)
+- Fix: modal no abría (AnimatePresence movido a FoodCard fuera del portal, keys en motion.divs)
 
 ### M — Siguientes mejoras
 - [ ] M1 · Google OAuth (H1-H4 arriba)
@@ -65,4 +67,4 @@ npm run build
 - [ ] M6 · Página de perfil con historial de favoritos
 
 ---
-*v5.0 · 2026-04-13*
+*v5.1 · 2026-04-14*
