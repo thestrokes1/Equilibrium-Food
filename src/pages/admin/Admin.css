@@ -188,6 +188,59 @@
   border-color: #3a3a3a;
 }
 
+/* ── REVIEWS PANEL ── */
+.admin-reviews-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.admin-reviews-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.admin-review-row {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 0.75rem;
+  padding: 0.9rem 1rem;
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+}
+
+.admin-review-stars {
+  font-size: 1rem;
+  color: #f59e0b;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+  padding-top: 0.1rem;
+}
+
+.admin-review-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-review-comment {
+  font-size: 0.875rem;
+  color: #d4d4d4;
+  margin: 0 0 0.3rem;
+  white-space: pre-wrap;
+}
+
+.admin-review-meta {
+  font-size: 0.75rem;
+  color: #6b6b6b;
+  margin: 0;
+}
+
 /* ── ORDERS HEADER ── */
 .admin-orders-header {
   display: flex;

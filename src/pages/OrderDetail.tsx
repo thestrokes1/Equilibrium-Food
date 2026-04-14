@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/context/ToastContext';
 import { supabase } from '@/lib/supabase';
-import type { DbOrder, DbOrderItem, Product } from '@/types/product';
+import StarRating from '@/components/ui/StarRating';
+import type { DbOrder, DbOrderItem, DbOrderReview, Product } from '@/types/product';
 import './Orders.css';
 
 const STEPS = [
@@ -29,6 +30,64 @@ export default function OrderDetail() {
   const [items, setItems] = useState<DbOrderItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+
+  // Review state
+  const [review, setReview] = useState<DbOrderReview | null>(null);
+  const [reviewLoading, setReviewLoading] = useState(false);
+  const [editingReview, setEditingReview] = useState(false);
+  const [draftRating, setDraftRating] = useState(0);
+  const [draftComment, setDraftComment] = useState('');
+  const [submittingReview, setSubmittingReview] = useState(false);
+
+  // Load existing review when order is delivered
+  useEffect(() => {
+    if (!user || !id || order?.status !== 'delivered') return;
+    setReviewLoading(true);
+    supabase
+      .from('order_reviews')
+      .select('*')
+      .eq('order_id', id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) {
+          setReview(data as DbOrderReview);
+          setDraftRating((data as DbOrderReview).rating);
+          setDraftComment((data as DbOrderReview).comment ?? '');
+        }
+        setReviewLoading(false);
+      });
+  }, [user, id, order?.status]);
+
+  const handleSubmitReview = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!draftRating || !user || !id) return;
+    setSubmittingReview(true);
+    if (review) {
+      const { data, error } = await supabase
+        .from('order_reviews')
+        .update({ rating: draftRating, comment: draftComment || null })
+        .eq('id', review.id)
+        .select()
+        .single();
+      if (!error && data) {
+        setReview(data as DbOrderReview);
+        setEditingReview(false);
+      }
+    } else {
+      const { data, error } = await supabase
+        .from('order_reviews')
+        .insert({
+          order_id: id,
+          user_id: user.id,
+          rating: draftRating,
+          comment: draftComment || null,
+        })
+        .select()
+        .single();
+      if (!error && data) setReview(data as DbOrderReview);
+    }
+    setSubmittingReview(false);
+  };
 
   const handleReorder = () => {
     items.forEach((item) => {
@@ -244,6 +303,67 @@ export default function OrderDetail() {
           </div>
 
           <p className="order-eta">Estimated delivery: ~{order.estimated_minutes} minutes</p>
+
+          {/* ── Review section (delivered orders only) ── */}
+          {order.status === 'delivered' && (
+            <div className="order-review-section">
+              <h3 className="order-review-title">Rate your order</h3>
+
+              {reviewLoading ? (
+                <div className="order-review-skeleton" />
+              ) : review && !editingReview ? (
+                <div className="order-review-submitted">
+                  <StarRating value={review.rating} readonly size="lg" />
+                  {review.comment && (
+                    <p className="order-review-comment">&quot;{review.comment}&quot;</p>
+                  )}
+                  <button className="order-review-edit-btn" onClick={() => setEditingReview(true)}>
+                    Edit review
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmitReview} className="order-review-form">
+                  <StarRating value={draftRating} onChange={setDraftRating} size="lg" />
+                  {draftRating > 0 && (
+                    <textarea
+                      className="order-review-textarea"
+                      placeholder="Leave a comment (optional)"
+                      value={draftComment}
+                      onChange={(e) => setDraftComment(e.target.value)}
+                      rows={3}
+                      maxLength={500}
+                    />
+                  )}
+                  <div className="order-review-actions">
+                    {editingReview && (
+                      <button
+                        type="button"
+                        className="order-review-cancel-btn"
+                        onClick={() => {
+                          setEditingReview(false);
+                          setDraftRating(review?.rating ?? 0);
+                          setDraftComment(review?.comment ?? '');
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    )}
+                    <button
+                      type="submit"
+                      className="order-review-submit-btn"
+                      disabled={!draftRating || submittingReview}
+                    >
+                      {submittingReview
+                        ? 'Saving…'
+                        : editingReview
+                          ? 'Update review'
+                          : 'Submit review'}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          )}
         </motion.div>
       </div>
     </div>

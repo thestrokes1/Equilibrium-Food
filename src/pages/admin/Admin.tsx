@@ -5,7 +5,13 @@ import Seo from '@/components/ui/Seo';
 import ImageUploadField from '@/components/ui/ImageUploadField';
 import { supabase } from '@/lib/supabase';
 import AdminRestaurantsTab from './AdminRestaurantsTab';
-import type { DbOrder, DbMenuItem, DbRestaurant, OrderStatus } from '@/types/product';
+import type {
+  DbOrder,
+  DbMenuItem,
+  DbRestaurant,
+  DbOrderReview,
+  OrderStatus,
+} from '@/types/product';
 import './Admin.css';
 
 type Tab = 'dashboard' | 'orders' | 'menu' | 'restaurants';
@@ -48,6 +54,8 @@ interface Stats {
   totalRestaurants: number;
   totalMenuItems: number;
   pendingOrders: number;
+  totalReviews: number;
+  avgRating: number;
 }
 
 type ItemForm = {
@@ -83,6 +91,7 @@ export default function Admin() {
   const [tab, setTab] = useState<Tab>('dashboard');
   const [stats, setStats] = useState<Stats | null>(null);
   const [orders, setOrders] = useState<DbOrder[]>([]);
+  const [recentReviews, setRecentReviews] = useState<(DbOrderReview & { order_id: string })[]>([]);
   const [menu, setMenu] = useState<(DbMenuItem & { restaurants?: DbRestaurant })[]>([]);
   const [restaurants, setRestaurants] = useState<DbRestaurant[]>([]);
   const [loadingStats, setLoadingStats] = useState(true);
@@ -107,15 +116,27 @@ export default function Admin() {
       supabase.from('orders').select('total, status'),
       supabase.from('restaurants').select('id', { count: 'exact', head: true }),
       supabase.from('menu_items').select('id', { count: 'exact', head: true }),
-    ]).then(([ordersRes, restRes, menuRes]) => {
+      supabase
+        .from('order_reviews')
+        .select('rating, order_id, created_at')
+        .order('created_at', { ascending: false })
+        .limit(5),
+    ]).then(([ordersRes, restRes, menuRes, reviewsRes]) => {
       const rows = (ordersRes.data ?? []) as { total: number; status: string }[];
+      const reviews = (reviewsRes.data ?? []) as (DbOrderReview & { order_id: string })[];
+      const avgRating = reviews.length
+        ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length
+        : 0;
       setStats({
         totalOrders: rows.length,
         totalRevenue: rows.reduce((s, r) => s + Number(r.total), 0),
         totalRestaurants: restRes.count ?? 0,
         totalMenuItems: menuRes.count ?? 0,
         pendingOrders: rows.filter((r) => r.status === 'pending').length,
+        totalReviews: reviews.length,
+        avgRating,
       });
+      setRecentReviews(reviews);
       setLoadingStats(false);
     });
   }, []);
@@ -374,6 +395,12 @@ export default function Admin() {
                   { label: 'Pending orders', value: stats?.pendingOrders ?? 0, accent: true },
                   { label: 'Restaurants', value: stats?.totalRestaurants ?? 0 },
                   { label: 'Menu items', value: stats?.totalMenuItems ?? 0 },
+                  {
+                    label: 'Reviews',
+                    value: stats?.totalReviews
+                      ? `${stats.totalReviews} · ⭐ ${stats.avgRating.toFixed(1)}`
+                      : '0',
+                  },
                 ].map(({ label, value, accent }, i) => (
                   <motion.div
                     key={label}
@@ -399,6 +426,32 @@ export default function Admin() {
                 </button>
               </div>
             </div>
+
+            {recentReviews.length > 0 && (
+              <div className="admin-reviews-panel">
+                <h2 className="admin-section-title">Recent reviews</h2>
+                <ul className="admin-reviews-list">
+                  {recentReviews.map((r) => (
+                    <li key={r.id} className="admin-review-row">
+                      <div className="admin-review-stars">
+                        {'★'.repeat(r.rating)}
+                        {'☆'.repeat(5 - r.rating)}
+                      </div>
+                      <div className="admin-review-body">
+                        {r.comment && <p className="admin-review-comment">{r.comment}</p>}
+                        <p className="admin-review-meta">
+                          Order #{r.order_id.slice(0, 8).toUpperCase()} ·{' '}
+                          {new Date(r.created_at).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                          })}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         )}
 

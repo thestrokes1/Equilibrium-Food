@@ -99,6 +99,15 @@ export interface DbOrder {
   order_items?: DbOrderItem[];
 }
 
+export interface DbOrderReview {
+  id: string;
+  order_id: string;
+  user_id: string;
+  rating: number;
+  comment: string | null;
+  created_at: string;
+}
+
 export interface DbProfile {
   id: string;
   full_name: string | null;

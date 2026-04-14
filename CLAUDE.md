@@ -1,7 +1,7 @@
 # CLAUDE.md — Equilibrium Food
 
 ## Estado actual
-App full-stack live en Vercel. Auth completo (email + forgot/reset password). Checkout → Orders → OrderDetail con realtime tracking, print ticket y re-order. Admin panel completo con 4 tabs (Dashboard · Orders con realtime · Menu CRUD · Restaurants CRUD). Favoritos con Supabase. LazyImage con IntersectionObserver. 52 tests en 7 archivos, 0 lint errors, 7 migraciones, 0 advisor warnings.
+App full-stack live en Vercel. Auth completo (email + forgot/reset password). Checkout → Orders → OrderDetail con realtime tracking, print ticket, re-order y **order ratings** (1-5 estrellas + comentario, editable). Admin panel completo con 4 tabs (Dashboard con reviews panel · Orders con realtime · Menu CRUD · Restaurants CRUD). Favoritos con Supabase. LazyImage con IntersectionObserver. 52 tests en 7 archivos, 0 lint errors, 9 migraciones, 0 advisor warnings.
 
 ---
 
@@ -36,6 +36,7 @@ npm run build
 - **Migrations**: 001 tablas · 002 RLS · 003 trigger auto-profile · 004 seed · 005 RLS perf · 006 RLS unified · 007 favorites · 008 storage bucket
 - **Storage**: bucket `images` (public). Upload via `src/lib/uploadImage.ts`. Transform/WebP via `src/lib/imageUrl.ts` → `transformImageUrl(url, {width, quality})`. `ImageUploadField` component: file picker + URL fallback + thumbnail preview.
 - **Push notifications**: VAPID keys generated (public key in `.env.local` + Vercel, private key in Supabase secret N1). Service worker at `public/sw.js`. Subscription hook `useNotifications` stores endpoint+keys in `push_subscriptions` table. Bell button in Navbar for logged-in users. Admin order status change fires `supabase.functions.invoke('push-notify')`. Edge Function `push-notify` deployed.
+- **Order reviews**: `order_reviews` table (migration 009). One review per order (UNIQUE). RLS: users own-row insert/update on delivered orders only, admin read all. `StarRating` component (`src/components/ui/StarRating.tsx`). Review form appears in OrderDetail when status = 'delivered'; editable after submit. Admin dashboard shows count + avg rating + recent reviews panel.
 
 ---
 
@@ -71,6 +72,7 @@ npm run build
 - [x] M4 · Realtime en admin restaurants tab (auto-refresh si otro admin edita)
 - [x] M5 · Notificaciones push (Web Push API + VAPID + Edge Function push-notify + SW + bell en navbar)
 - [x] M6 · Página de perfil con historial de favoritos + quick-add al carrito
+- [x] M7 · Order ratings: 1-5 estrellas + comentario en OrderDetail (delivered) · `order_reviews` table + RLS · `StarRating` component · Admin dashboard reviews panel
 
 ---
-*v5.1 · 2026-04-14*
+*v5.2 · 2026-04-14*
