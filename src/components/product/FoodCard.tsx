@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import type { FoodCardProps } from '@/types/product';
 import LazyImage from '@/components/ui/LazyImage';
 import ProductModal from './ProductModal';
+import { transformImageUrl } from '@/lib/imageUrl';
 import './FoodCard.css';
 
 const BADGE_STYLES = {
@@ -67,7 +68,12 @@ export default function FoodCard({
     <>
       <div className="food-card" onClick={() => setModalOpen(true)}>
         <div className="food-img-wrap">
-          <LazyImage src={image} alt={name} className="food-img" decoding="async" />
+          <LazyImage
+            src={transformImageUrl(image, { width: 480, quality: 80 })}
+            alt={name}
+            className="food-img"
+            decoding="async"
+          />
           {badge && (
             <span className="food-badge" style={badgeStyle}>
               {badge.label}

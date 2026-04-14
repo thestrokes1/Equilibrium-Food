@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { motion } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
+import ImageUploadField from '@/components/ui/ImageUploadField';
 import type { DbRestaurant } from '@/types/product';
 
 const CATEGORIES = ['burgers', 'pizza', 'sushi', 'pasta', 'tacos', 'vegan', 'mains', 'other'];
@@ -361,12 +362,22 @@ export default function AdminRestaurantsTab() {
 
                 <div className="admin-field-row-2">
                   <div className="admin-field">
-                    <label className="admin-field-label">Logo URL</label>
-                    {inp('logo_url', 'text', 'https://...')}
+                    <label className="admin-field-label">Logo</label>
+                    <ImageUploadField
+                      value={form.logo_url}
+                      onChange={(url) => setF('logo_url', url)}
+                      folder="restaurants/logos"
+                      placeholder="https://..."
+                    />
                   </div>
                   <div className="admin-field">
-                    <label className="admin-field-label">Cover URL</label>
-                    {inp('cover_url', 'text', 'https://...')}
+                    <label className="admin-field-label">Cover image</label>
+                    <ImageUploadField
+                      value={form.cover_url}
+                      onChange={(url) => setF('cover_url', url)}
+                      folder="restaurants/covers"
+                      placeholder="https://..."
+                    />
                   </div>
                 </div>
 

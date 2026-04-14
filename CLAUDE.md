@@ -33,7 +33,8 @@ npm run build
 - **LazyImage**: IntersectionObserver (rootMargin 200px) + fade-in, placeholder data URI, drop-in `<img>`. `realSrcSet` ref para detección fiable de onLoad; checks `el.complete` para imágenes cacheadas.
 - **Modal fix**: `createPortal(modal, document.body)` en `ProductModal.tsx`. `AnimatePresence` en `FoodCard` (fuera del portal) para animación enter/exit correcta.
 - **Tests**: vitest `pool: 'forks'`, `maxForks: 2` evita OOM de jsdom. `vi.hoisted()` para mocks con hoisting. `vi.unmock()` para override de setup.js en archivos específicos.
-- **Migrations**: 001 tablas · 002 RLS · 003 trigger auto-profile · 004 seed · 005 RLS perf · 006 RLS unified · 007 favorites
+- **Migrations**: 001 tablas · 002 RLS · 003 trigger auto-profile · 004 seed · 005 RLS perf · 006 RLS unified · 007 favorites · 008 storage bucket
+- **Storage**: bucket `images` (public). Upload via `src/lib/uploadImage.ts`. Transform/WebP via `src/lib/imageUrl.ts` → `transformImageUrl(url, {width, quality})`. `ImageUploadField` component: file picker + URL fallback + thumbnail preview.
 
 ---
 
@@ -60,11 +61,11 @@ npm run build
 
 ### M — Siguientes mejoras
 - [ ] M1 · Google OAuth (H1-H4 arriba)
-- [ ] M2 · Supabase Storage para imágenes + transform API (WebP/resize)
-- [ ] M3 · Infinite scroll en /restaurants (actualmente carga todo)
-- [ ] M4 · Realtime en admin restaurants tab (auto-refresh si otro admin edita)
+- [x] M2 · Supabase Storage bucket `images` (5 MB, WebP/PNG/JPEG/AVIF) · RLS admin write + public read · `uploadImage()` helper · `transformImageUrl()` render API · `ImageUploadField` en admin menu + restaurants modals · 8 migraciones
+- [x] M3 · Infinite scroll en /restaurants con IntersectionObserver (PAGE_SIZE 6)
+- [x] M4 · Realtime en admin restaurants tab (auto-refresh si otro admin edita)
 - [ ] M5 · Notificaciones push (Supabase Webhooks → Edge Function → Web Push API)
-- [ ] M6 · Página de perfil con historial de favoritos
+- [x] M6 · Página de perfil con historial de favoritos + quick-add al carrito
 
 ---
 *v5.1 · 2026-04-14*

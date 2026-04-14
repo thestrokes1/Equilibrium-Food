@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback, type FormEvent, type ReactNode } from
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Seo from '@/components/ui/Seo';
+import ImageUploadField from '@/components/ui/ImageUploadField';
 import { supabase } from '@/lib/supabase';
 import AdminRestaurantsTab from './AdminRestaurantsTab';
 import type { DbOrder, DbMenuItem, DbRestaurant, OrderStatus } from '@/types/product';
@@ -629,7 +630,15 @@ export default function Admin() {
                   {field('Delivery time (min)', inp('delivery_time', 'text', '25'))}
                 </div>
 
-                {field('Image URL', inp('image_url', 'text', 'https://...'))}
+                {field(
+                  'Image',
+                  <ImageUploadField
+                    value={itemForm.image_url}
+                    onChange={(url) => setItemForm((f) => ({ ...f, image_url: url }))}
+                    folder="menu"
+                    placeholder="https://..."
+                  />
+                )}
                 {field(
                   'Description',
                   <textarea
