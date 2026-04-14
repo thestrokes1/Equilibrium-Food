@@ -12,7 +12,7 @@ import webpush from 'npm:web-push@3';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const VAPID_PUBLIC_KEY =
-  'VAPID_PUBLIC_KEY_REDACTED';
+  'BK32Cl2XUGd5EBE-MSOx8q3V2A1YMTL-MuqM0TdFGwfjRviwOKOsaOb6XC_T_vHBxx8GWYDZKcCS5Rm_8fvTa8A';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',

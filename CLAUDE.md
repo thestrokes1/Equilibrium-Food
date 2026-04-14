@@ -42,8 +42,8 @@ npm run build
 ## PRÓXIMOS PASOS
 
 ### N — Pasos manuales pendientes
-- [ ] N1 · Supabase Dashboard → Edge Functions → push-notify → Secrets → `VAPID_PRIVATE_KEY=VAPID_PRIVATE_KEY_REDACTED`
-- [ ] N2 · Vercel → Project → Settings → Env Vars → `VITE_VAPID_PUBLIC_KEY=VAPID_PUBLIC_KEY_REDACTED` (all envs)
+- [ ] N1 · Supabase Dashboard → Edge Functions → push-notify → Secrets → set `VAPID_PRIVATE_KEY` (rotate via `npx web-push generate-vapid-keys`)
+- [ ] N2 · Vercel → Project → Settings → Env Vars → `VITE_VAPID_PUBLIC_KEY` (all envs) — value in `.env.local`
 
 ### H — Google OAuth (solo config manual, código listo)
 - [ ] H1 · Supabase Dashboard → Auth → Providers → Google → Enable. Callback: `https://rzevfdpsozjrdqixxiex.supabase.co/auth/v1/callback`
