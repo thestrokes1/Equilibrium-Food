@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from '@/context/AuthContext';
 import { CartProvider } from '@/context/CartContext';
 import { ToastProvider } from '@/context/ToastContext';
+import { FavoritesProvider } from '@/context/FavoritesContext';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import App from '@/App';
 import './index.css';
@@ -14,9 +15,11 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <ErrorBoundary>
         <ToastProvider>
           <AuthProvider>
-            <CartProvider>
-              <App />
-            </CartProvider>
+            <FavoritesProvider>
+              <CartProvider>
+                <App />
+              </CartProvider>
+            </FavoritesProvider>
           </AuthProvider>
         </ToastProvider>
       </ErrorBoundary>

@@ -153,7 +153,7 @@ export default function Checkout() {
               <>
                 <h2 className="checkout-section-title">Delivery address</h2>
                 {error && <div className="checkout-error">{error}</div>}
-                <form onSubmit={handleAddress} className="checkout-form">
+                <form onSubmit={handleAddress} className="checkout-form" noValidate>
                   <div className="checkout-field-row">
                     {(['Home', 'Work', 'Other'] as const).map((lbl) => (
                       <button

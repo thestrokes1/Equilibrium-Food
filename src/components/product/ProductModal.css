@@ -3,10 +3,6 @@
   inset: 0;
   background: rgba(0, 0, 0, 0.75);
   z-index: 300;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
   backdrop-filter: blur(4px);
 }
 
@@ -14,10 +10,16 @@
   background: #111111;
   border: 1px solid #2a2a2a;
   border-radius: 20px;
-  width: 100%;
+  width: calc(100% - 40px);
   max-width: 480px;
   overflow: hidden;
-  position: relative;
+  /* position: fixed + inset: 0 + margin: auto = viewport centering
+     without transform, so Framer Motion y/scale animations work freely */
+  position: fixed;
+  z-index: 301;
+  inset: 0;
+  margin: auto;
+  height: fit-content;
   max-height: 90dvh;
   display: flex;
   flex-direction: column;
@@ -45,7 +47,9 @@
   min-height: 34px;
 }
 
-.modal-close:hover { background: rgba(0, 0, 0, 0.85); }
+.modal-close:hover {
+  background: rgba(0, 0, 0, 0.85);
+}
 
 /* ── IMAGE ── */
 .modal-img-wrap {
@@ -174,7 +178,9 @@
   line-height: 1;
 }
 
-.qty-btn:hover { color: #22c55e; }
+.qty-btn:hover {
+  color: #22c55e;
+}
 
 .qty-num {
   font-family: 'Syne', sans-serif;
@@ -197,30 +203,43 @@
   font-weight: 600;
   cursor: pointer;
   font-family: 'Outfit', sans-serif;
-  transition: background 0.2s, transform 0.15s;
+  transition:
+    background 0.2s,
+    transform 0.15s;
   white-space: nowrap;
 }
 
-.modal-add-btn:hover  { background: #16a34a; transform: translateY(-1px); }
-.modal-add-btn.added  { background: #166534; }
+.modal-add-btn:hover {
+  background: #16a34a;
+  transform: translateY(-1px);
+}
+.modal-add-btn.added {
+  background: #166534;
+}
 
 /* ── MOBILE — bottom sheet ── */
 @media (max-width: 500px) {
-  .modal-backdrop {
-    align-items: flex-end;
-    padding: 0;
-  }
-
   .modal-panel {
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    height: fit-content;
     border-radius: 20px 20px 0 0;
-    align-self: flex-end;
     max-height: 88dvh;
     border-bottom: none;
   }
 
-  .modal-img-wrap { height: 200px; }
+  .modal-img-wrap {
+    height: 200px;
+  }
 
-  .modal-body { padding: 16px 20px 20px; }
+  .modal-body {
+    padding: 16px 20px 20px;
+  }
 
   .modal-footer {
     flex-direction: column;

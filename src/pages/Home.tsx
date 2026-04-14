@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
-import { useToast } from '@/context/ToastContext';
 import TopBar from '@/components/layout/TopBar';
 import Navbar from '@/components/layout/Navbar';
 import Hero from '@/components/sections/Hero';
@@ -18,25 +17,13 @@ export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [dataLoading, setDataLoading] = useState(true);
   const { addItem } = useCart();
-  const { addToast } = useToast();
 
   useEffect(() => {
-    getProducts()
-      .then((data) => {
-        setProducts(data);
-        setDataLoading(false);
-      })
-      .catch(() => {
-        setDataLoading(false);
-        addToast({
-          title: 'Could not load menu',
-          sub: 'Check your connection and try refreshing',
-          type: 'error',
-          icon: '⚠️',
-          duration: 6000,
-        });
-      });
-  }, [addToast]);
+    getProducts().then((data) => {
+      setProducts(data);
+      setDataLoading(false);
+    });
+  }, []);
 
   const categories = Array.from(new Set(products.map((p) => p.category)));
 

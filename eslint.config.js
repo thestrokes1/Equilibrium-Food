@@ -41,6 +41,14 @@ export default [
     rules: sharedRules,
   },
 
+  // Test/setup files — need Node globals (global, process) for vitest
+  {
+    files: ['src/test/**/*.{js,jsx}'],
+    languageOptions: {
+      globals: { ...globals.browser, ...globals.node },
+    },
+  },
+
   // TSX files — TypeScript parser
   {
     files: ['**/*.tsx'],

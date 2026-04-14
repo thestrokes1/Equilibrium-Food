@@ -65,6 +65,24 @@ export default function OrderDetail() {
     });
   }, [user, id]);
 
+  // Realtime: update order status as it changes in the DB
+  useEffect(() => {
+    if (!id) return;
+    const channel = supabase
+      .channel(`order-status-${id}`)
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'orders', filter: `id=eq.${id}` },
+        (payload) => {
+          setOrder((prev) => (prev ? { ...prev, ...(payload.new as DbOrder) } : prev));
+        }
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [id]);
+
   if (loading) {
     return (
       <div className="orders-page">
@@ -123,7 +141,14 @@ export default function OrderDetail() {
         >
           <div className="order-detail-header">
             <div>
-              <h1 className="order-detail-id">Order #{order.id.slice(0, 8).toUpperCase()}</h1>
+              <h1 className="order-detail-id">
+                Order #{order.id.slice(0, 8).toUpperCase()}
+                {!isCancelled && order.status !== 'delivered' && (
+                  <span className="order-live-badge" title="Status updates in real-time">
+                    <span className="order-live-dot" /> LIVE
+                  </span>
+                )}
+              </h1>
               <p className="order-detail-date">
                 {new Date(order.created_at).toLocaleDateString('en-US', {
                   weekday: 'long',

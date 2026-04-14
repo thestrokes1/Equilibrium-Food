@@ -1,5 +1,5 @@
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useState, useCallback, useRef } from 'react';
 import { useCart } from '@/context/CartContext';
 import { useKeyPress } from '@/hooks/useKeyPress';
@@ -34,109 +34,111 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
 
   // Render into document.body via portal so position:fixed is relative
   // to the viewport, not any transformed Framer Motion ancestor.
+  // AnimatePresence lives in FoodCard (outside the portal) so it can see
+  // the conditional mount/unmount and run exit animations correctly.
   return createPortal(
-    <AnimatePresence>
+    <>
       {/* Backdrop and panel are siblings so aria-hidden on backdrop
           doesn't suppress the dialog from the accessibility tree */}
-      <>
-        <motion.div
-          className="modal-backdrop"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClose}
-          aria-hidden="true"
-        />
-        <motion.div
-          ref={panelRef}
-          className="modal-panel"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="modal-title"
-          initial={{ opacity: 0, y: 40, scale: 0.97 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 40, scale: 0.97 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 28 }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {/* Close */}
-          <button className="modal-close" onClick={onClose}>
-            ✕
-          </button>
+      <motion.div
+        key="modal-backdrop"
+        className="modal-backdrop"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={onClose}
+        aria-hidden="true"
+      />
+      <motion.div
+        key="modal-panel"
+        ref={panelRef}
+        className="modal-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        initial={{ opacity: 0, y: 40, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 40, scale: 0.97 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 28 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close */}
+        <button className="modal-close" onClick={onClose}>
+          ✕
+        </button>
 
-          {/* Image */}
-          <div className="modal-img-wrap">
-            <img src={product.image} alt={product.name} className="modal-img" loading="lazy" />
-            {product.badge && (
-              <span
-                className="modal-badge"
-                style={{
-                  background:
-                    product.badge.type === 'new'
-                      ? '#f59e0b'
-                      : product.badge.type === 'popular'
-                        ? '#ef4444'
-                        : '#22c55e',
-                  color: '#0d0d0d',
-                }}
-              >
-                {product.badge.label}
-              </span>
-            )}
+        {/* Image */}
+        <div className="modal-img-wrap">
+          <img src={product.image} alt={product.name} className="modal-img" loading="lazy" />
+          {product.badge && (
+            <span
+              className="modal-badge"
+              style={{
+                background:
+                  product.badge.type === 'new'
+                    ? '#f59e0b'
+                    : product.badge.type === 'popular'
+                      ? '#ef4444'
+                      : '#22c55e',
+                color: '#0d0d0d',
+              }}
+            >
+              {product.badge.label}
+            </span>
+          )}
+        </div>
+
+        {/* Content */}
+        <div className="modal-body">
+          <div className="modal-top">
+            <div>
+              <h2 id="modal-title" className="modal-name">
+                {product.name}
+              </h2>
+              {product.restaurant && <p className="modal-restaurant">{product.restaurant}</p>}
+            </div>
+            <div className="modal-price">${Number(product.price).toFixed(2)}</div>
           </div>
 
-          {/* Content */}
-          <div className="modal-body">
-            <div className="modal-top">
-              <div>
-                <h2 id="modal-title" className="modal-name">
-                  {product.name}
-                </h2>
-                {product.restaurant && <p className="modal-restaurant">{product.restaurant}</p>}
-              </div>
-              <div className="modal-price">${Number(product.price).toFixed(2)}</div>
-            </div>
+          <div className="modal-meta">
+            <span className="modal-meta-pill">⏱ {product.deliveryTime ?? '25'} min</span>
+            <span className="modal-meta-pill">⭐ {product.rating ?? '4.7'}</span>
+            <span className="modal-meta-pill">🍽️ {product.category}</span>
+          </div>
 
-            <div className="modal-meta">
-              <span className="modal-meta-pill">⏱ {product.deliveryTime ?? '25'} min</span>
-              <span className="modal-meta-pill">⭐ {product.rating ?? '4.7'}</span>
-              <span className="modal-meta-pill">🍽️ {product.category}</span>
-            </div>
+          {product.description && <p className="modal-desc">{product.description}</p>}
 
-            {product.description && <p className="modal-desc">{product.description}</p>}
-
-            {/* Quantity + Add */}
-            <div className="modal-footer">
-              <div className="modal-qty">
-                <button
-                  className="qty-btn"
-                  onClick={() => setQty((q) => Math.max(1, q - 1))}
-                  aria-label="Decrease quantity"
-                >
-                  −
-                </button>
-                <span className="qty-num" aria-label={`Quantity: ${qty}`}>
-                  {qty}
-                </span>
-                <button
-                  className="qty-btn"
-                  onClick={() => setQty((q) => q + 1)}
-                  aria-label="Increase quantity"
-                >
-                  +
-                </button>
-              </div>
-
-              <button className={`modal-add-btn ${added ? 'added' : ''}`} onClick={handleAdd}>
-                {added
-                  ? '✓ Added to cart!'
-                  : `Add ${qty > 1 ? `${qty}x ` : ''}— $${(product.price * qty).toFixed(2)}`}
+          {/* Quantity + Add */}
+          <div className="modal-footer">
+            <div className="modal-qty">
+              <button
+                className="qty-btn"
+                onClick={() => setQty((q) => Math.max(1, q - 1))}
+                aria-label="Decrease quantity"
+              >
+                −
+              </button>
+              <span className="qty-num" aria-label={`Quantity: ${qty}`}>
+                {qty}
+              </span>
+              <button
+                className="qty-btn"
+                onClick={() => setQty((q) => q + 1)}
+                aria-label="Increase quantity"
+              >
+                +
               </button>
             </div>
+
+            <button className={`modal-add-btn ${added ? 'added' : ''}`} onClick={handleAdd}>
+              {added
+                ? '✓ Added to cart!'
+                : `Add ${qty > 1 ? `${qty}x ` : ''}— $${(product.price * qty).toFixed(2)}`}
+            </button>
           </div>
-        </motion.div>
-      </>
-    </AnimatePresence>,
+        </div>
+      </motion.div>
+    </>,
     document.body
   );
 }

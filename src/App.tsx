@@ -2,6 +2,7 @@ import { lazy, Suspense, type ReactNode } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import AuthGuard from '@/components/ui/AuthGuard';
+import AdminGuard from '@/components/ui/AdminGuard';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import CartDrawer from '@/components/cart/CartDrawer';
 
@@ -18,6 +19,7 @@ const OrderDetail = lazy(() => import('@/pages/OrderDetail'));
 const Profile = lazy(() => import('@/pages/Profile'));
 const Restaurants = lazy(() => import('@/pages/Restaurants'));
 const RestaurantDetail = lazy(() => import('@/pages/RestaurantDetail'));
+const Admin = lazy(() => import('@/pages/admin/Admin'));
 
 function PageLoader() {
   return (
@@ -166,6 +168,18 @@ export default function App() {
                 <AuthGuard>
                   <Profile />
                 </AuthGuard>
+              </Bounded>
+            }
+          />
+
+          {/* Admin */}
+          <Route
+            path="/admin"
+            element={
+              <Bounded path="/admin">
+                <AdminGuard>
+                  <Admin />
+                </AdminGuard>
               </Bounded>
             }
           />

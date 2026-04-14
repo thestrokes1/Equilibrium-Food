@@ -24,11 +24,42 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s;
+  /* opacity transition pairs with LazyImage's inline opacity; transform for hover zoom */
+  transition:
+    transform 0.3s,
+    opacity 0.35s ease;
 }
 
 .food-card:hover .food-img {
   transform: scale(1.05);
+}
+
+.food-fav {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+  line-height: 1;
+}
+
+.food-fav:hover {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.food-fav.faved {
+  color: #ef4444;
 }
 
 .food-badge {

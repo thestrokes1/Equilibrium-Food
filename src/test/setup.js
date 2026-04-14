@@ -2,6 +2,19 @@ import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 import React from 'react';
 
+// jsdom doesn't implement IntersectionObserver — provide a stub that immediately
+// fires the callback as "intersecting" so LazyImage loads its src in tests.
+global.IntersectionObserver = class {
+  constructor(cb) {
+    this._cb = cb;
+  }
+  observe(el) {
+    this._cb([{ isIntersecting: true, target: el }]);
+  }
+  unobserve() {}
+  disconnect() {}
+};
+
 // Mock Supabase client — avoids env-var errors and network calls in tests
 vi.mock('@/lib/supabase', () => ({
   supabase: {
@@ -34,6 +47,8 @@ vi.mock('@/context/AuthContext', () => ({
     signOut: vi.fn(),
     signInWithGoogle: vi.fn(),
     refreshProfile: vi.fn(),
+    resetPasswordForEmail: vi.fn(),
+    updatePassword: vi.fn(),
   }),
   AuthProvider: ({ children }) => children,
 }));

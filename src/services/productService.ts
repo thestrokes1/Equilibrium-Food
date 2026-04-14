@@ -20,23 +20,21 @@ function dbItemToProduct(item: DbMenuItem): Product {
 }
 
 export async function getProducts(): Promise<Product[]> {
-  const { data, error } = await supabase
-    .from('menu_items')
-    .select('*, restaurants(name)')
-    .eq('is_available', true)
-    .order('sort_order');
+  try {
+    const { data, error } = await supabase
+      .from('menu_items')
+      .select('*, restaurants(name)')
+      .eq('is_available', true)
+      .order('sort_order');
 
-  if (error) {
-    // Real network / auth error — let caller handle it
-    throw new Error(error.message);
-  }
+    if (error || !data || data.length === 0) {
+      return localProducts;
+    }
 
-  if (!data || data.length === 0) {
-    // DB is empty (fresh project) — silently fall back to local seed
+    return (data as DbMenuItem[]).map(dbItemToProduct);
+  } catch {
     return localProducts;
   }
-
-  return (data as DbMenuItem[]).map(dbItemToProduct);
 }
 
 export async function getCategories(): Promise<string[]> {

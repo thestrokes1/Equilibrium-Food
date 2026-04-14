@@ -20,5 +20,14 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: './src/test/setup.js',
     css: false,
+    // jsdom workers share a heap in thread mode — use fork pool (isolated processes)
+    // and cap to 2 concurrent forks to keep peak memory manageable
+    pool: 'forks',
+    poolOptions: {
+      forks: {
+        maxForks: 2,
+        minForks: 1,
+      },
+    },
   },
 });

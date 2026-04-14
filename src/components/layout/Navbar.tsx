@@ -108,6 +108,15 @@ export default function Navbar() {
                       transition={{ duration: 0.15 }}
                     >
                       <p className="nav-user-email">{user.email}</p>
+                      {user.profile?.role === 'admin' && (
+                        <Link
+                          to="/admin"
+                          className="nav-user-item nav-admin-link"
+                          onClick={() => setUserMenuOpen(false)}
+                        >
+                          ⚙️ Admin panel
+                        </Link>
+                      )}
                       <Link
                         to="/orders"
                         className="nav-user-item"

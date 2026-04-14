@@ -1,7 +1,10 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { CART_ADDED_FEEDBACK_MS } from '@/constants';
+import { useFavorites } from '@/context/FavoritesContext';
+import { useAuth } from '@/context/AuthContext';
 import type { FoodCardProps } from '@/types/product';
+import LazyImage from '@/components/ui/LazyImage';
 import ProductModal from './ProductModal';
 import './FoodCard.css';
 
@@ -26,6 +29,17 @@ export default function FoodCard({
 }: FoodCardProps) {
   const [added, setAdded] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const { user } = useAuth();
+  const { isFavorite, toggle } = useFavorites();
+  const favId = String(id);
+  const faved = isFavorite(favId);
+
+  const handleFavorite = (e: import('react').MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!user) return;
+    toggle(favId);
+  };
 
   const handleAdd = (e: import('react').MouseEvent) => {
     e.preventDefault();
@@ -53,11 +67,21 @@ export default function FoodCard({
     <>
       <div className="food-card" onClick={() => setModalOpen(true)}>
         <div className="food-img-wrap">
-          <img src={image} alt={name} className="food-img" loading="lazy" />
+          <LazyImage src={image} alt={name} className="food-img" decoding="async" />
           {badge && (
             <span className="food-badge" style={badgeStyle}>
               {badge.label}
             </span>
+          )}
+          {user && (
+            <motion.button
+              className={`food-fav ${faved ? 'faved' : ''}`}
+              onClick={handleFavorite}
+              whileTap={{ scale: 0.8 }}
+              aria-label={faved ? `Remove ${name} from favorites` : `Add ${name} to favorites`}
+            >
+              {faved ? '♥' : '♡'}
+            </motion.button>
           )}
         </div>
 
@@ -82,7 +106,9 @@ export default function FoodCard({
         </div>
       </div>
 
-      {modalOpen && <ProductModal product={product} onClose={() => setModalOpen(false)} />}
+      <AnimatePresence>
+        {modalOpen && <ProductModal product={product} onClose={() => setModalOpen(false)} />}
+      </AnimatePresence>
     </>
   );
 }

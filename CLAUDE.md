@@ -1,7 +1,7 @@
 # CLAUDE.md — Equilibrium Food
 
 ## Estado actual
-App full-stack live en Vercel. Auth email/password funcional. Checkout → Orders → OrderDetail completo. Google OAuth pendiente de config manual. 32 tests, 0 lint errors, 6 migraciones aplicadas, 0 advisor warnings.
+App full-stack live en Vercel. Auth completo (email + forgot/reset password). Checkout → Orders → OrderDetail con realtime tracking, print ticket y re-order. Admin panel completo con 4 tabs (Dashboard · Orders con realtime · Menu CRUD · Restaurants CRUD). Favoritos con Supabase. LazyImage con IntersectionObserver. 52 tests en 7 archivos, 0 lint errors, 7 migraciones, 0 advisor warnings.
 
 ---
 
@@ -9,7 +9,7 @@ App full-stack live en Vercel. Auth email/password funcional. Checkout → Order
 
 | Recurso | Valor |
 |---|---|
-| Supabase Project | `rzevfdpsozjrdqixxiex` · `https://rzevfdpsozjrdqixxiex.supabase.co` |
+| Supabase Project | `rzevfdpsozjrdqixxiex` |
 | Vercel Project | `equilibrium-food` · `prj_XXUmtmLkTo8nPmfiuoIF6RfGFGGE` |
 | Vercel Team | `team_y858qJaSBj8WXao7BeeuNIlO` |
 | POS (NO tocar) | `rkeqsfmfzacazgzacoin` |
@@ -20,56 +20,49 @@ Stack: React 18 + TS + Vite 5 · Vanilla CSS · Framer Motion 11 · React Router
 ```bash
 npm run dev     # puerto 3000
 npm run lint    # 0 errores
-npm test        # 32 tests
+npm test        # 52 tests, 7 archivos (pool: forks, maxForks: 2)
 npm run build
 ```
 
 ## Arquitectura clave
-- **DB prefix `eq_`**: tablas `eq_restaurants`, `eq_menu_items`, `eq_addresses`, `eq_orders`, `eq_order_items`, `profiles`
-- **RLS**: anon lee restaurantes/menú. Auth requerida para órdenes/direcciones. Admin para writes.
-- **Auth**: `AuthContext` → `supabase.auth` · sesión en localStorage · `AuthGuard` para rutas protegidas
-- **Cart**: localStorage. Checkout requiere login → redirect `/auth/login?redirect=/checkout`
-- **Modal fix (v2.1)**: `createPortal(modal, document.body)` en `ProductModal.tsx` — escapar transform stacking context de `motion.div layout`
-- **DB migrations**: 001 tablas · 002 RLS · 003 trigger auto-profile · 004 seed · 005 RLS perf fixes · 006 RLS unified (0 warnings)
+- **DB tables**: `restaurants`, `menu_items`, `orders`, `order_items`, `addresses`, `profiles`, `favorites` (sin prefix eq_)
+- **RLS**: anon lee restaurantes/menú. Auth requerida para órdenes/favoritos. Admin para writes.
+- **Auth**: `AuthContext` → `supabase.auth` · `AuthGuard` / `AdminGuard` para rutas protegidas
+- **Cart**: localStorage key `'cart'`. Checkout requiere login → redirect post-login.
+- **Favorites**: `FavoritesContext` — optimistic updates, NOOP seguro fuera del provider (no throw).
+- **LazyImage**: IntersectionObserver (rootMargin 200px) + fade-in, placeholder data URI, drop-in `<img>`.
+- **Modal fix**: `createPortal(modal, document.body)` en `ProductModal.tsx`.
+- **Tests**: vitest `pool: 'forks'`, `maxForks: 2` evita OOM de jsdom. `vi.hoisted()` para mocks con hoisting. `vi.unmock()` para override de setup.js en archivos específicos.
+- **Migrations**: 001 tablas · 002 RLS · 003 trigger auto-profile · 004 seed · 005 RLS perf · 006 RLS unified · 007 favorites
 
 ---
 
 ## PRÓXIMOS PASOS
 
-### H — Google OAuth (solo config, código ya correcto)
+### H — Google OAuth (solo config manual, código listo)
 - [ ] H1 · Supabase Dashboard → Auth → Providers → Google → Enable. Callback: `https://rzevfdpsozjrdqixxiex.supabase.co/auth/v1/callback`
-- [ ] H2 · Google Console → OAuth 2.0 Client ID (Web) · redirect URI = callback de arriba · origin = `https://equilibrium-food.vercel.app`
+- [ ] H2 · Google Console → OAuth 2.0 Client ID · redirect URI = callback · origin = `https://equilibrium-food.vercel.app`
 - [ ] H3 · Pegar Client ID + Secret en Supabase → Save
 - [ ] H4 · Verificar en producción
 
-### I — UX Features
-- [x] I1 · Print ticket: `window.print()` + `@media print` CSS en OrderDetail
-- [x] I2 · Filtros precio/rating en MenuSection — sort select: default/top rated/price↑/price↓
-- [x] I3 · Load-more pagination en MenuSection (PAGE_SIZE=8, reset on filter/sort change)
-- [x] I4 · `/restaurants` list + `/restaurants/:slug` detail con hero + menu grid
-- [ ] I5 · Favoritos: tabla `eq_favorites` (user_id + menu_item_id)
-- [ ] I6 · Realtime order tracking (Supabase subscriptions)
-- [x] I7 · Re-order: botón en OrderDetail para re-añadir items al cart
+### Completado ✓
+- Auth completo (email, forgot/reset, redirect post-login, email confirmation)
+- Checkout → Orders → OrderDetail (print ticket, re-order, realtime status via Supabase)
+- Restaurants list + detail pages
+- Sort/filter + load-more en MenuSection
+- Favoritos (FavoritesContext + DB + FoodCard heart button)
+- Admin panel 4 tabs: dashboard stats · orders con realtime · menu CRUD · restaurants CRUD
+- Error boundaries por ruta · SEO · Toast de error · Skeletons
+- LazyImage con IntersectionObserver en FoodCard
+- 52 tests en 7 archivos (CartContext, FoodCard, cart-flow, Toast, auth-context, checkout-validation, favorites-context)
 
-### J — Auth & Onboarding
-- [x] J1 · Email confirmation: página "Check your email" en Register.tsx (ya implementado)
-- [x] J2 · Forgot password: `/auth/forgot-password` con `supabase.auth.resetPasswordForEmail()`
-- [x] J3 · Reset password: `/auth/reset-password` callback con `supabase.auth.updateUser()`
-- [x] J4 · Redirect post-login a `/checkout` — via `AuthGuard` → `state={{ from: location }}` → Login navega a `from.pathname`
-
-### K — Calidad
-- [ ] K1 · Tests de integración: Checkout, Orders, AuthContext
-- [x] K2 · Error boundaries por ruta — `Bounded` wrapper con path key en App.tsx
-- [ ] K3 · Image optimization: WebP / IntersectionObserver
-- [x] K4 · SEO — `Seo.tsx` (document.title + meta description, sin dep extra)
-- [x] K5 · Toast de error global — productService throws on network error, Home.tsx catches + toast
-- [x] K6 · Skeleton en Profile y Orders durante carga (addr skeleton en Profile, list skeleton en Orders)
-
-### L — Admin Panel (futuro)
-- [ ] L1 · Ruta `/admin` protegida por `role = 'admin'`
-- [ ] L2 · CRUD restaurantes + menu items
-- [ ] L3 · Vista órdenes con cambio de status
-- [ ] L4 · Dashboard métricas
+### M — Siguientes mejoras
+- [ ] M1 · Google OAuth (H1-H4 arriba)
+- [ ] M2 · Supabase Storage para imágenes + transform API (WebP/resize)
+- [ ] M3 · Infinite scroll en /restaurants (actualmente carga todo)
+- [ ] M4 · Realtime en admin restaurants tab (auto-refresh si otro admin edita)
+- [ ] M5 · Notificaciones push (Supabase Webhooks → Edge Function → Web Push API)
+- [ ] M6 · Página de perfil con historial de favoritos
 
 ---
-*v3.0 · 2026-04-13*
+*v5.0 · 2026-04-13*
