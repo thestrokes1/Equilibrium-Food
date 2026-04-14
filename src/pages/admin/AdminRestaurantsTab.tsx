@@ -61,6 +61,36 @@ export default function AdminRestaurantsTab() {
         setRestaurants((data as DbRestaurant[]) ?? []);
         setLoading(false);
       });
+
+    // Realtime: auto-refresh when another admin edits restaurants
+    const channel = supabase
+      .channel('admin-restaurants-rt')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'restaurants' },
+        (payload) => setRestaurants((prev) => [...prev, payload.new as DbRestaurant])
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'restaurants' },
+        (payload) =>
+          setRestaurants((prev) =>
+            prev.map((r) =>
+              r.id === (payload.new as DbRestaurant).id ? (payload.new as DbRestaurant) : r
+            )
+          )
+      )
+      .on(
+        'postgres_changes',
+        { event: 'DELETE', schema: 'public', table: 'restaurants' },
+        (payload) =>
+          setRestaurants((prev) => prev.filter((r) => r.id !== (payload.old as DbRestaurant).id))
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const openNew = () => {

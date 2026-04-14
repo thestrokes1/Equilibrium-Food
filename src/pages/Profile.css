@@ -341,3 +341,126 @@
 .profile-addr-del:hover {
   color: #ef4444;
 }
+
+/* ── Favorites section ── */
+.profile-favs-section {
+  margin-top: 1.5rem;
+}
+
+.profile-favs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+.profile-fav-card {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  background: #111;
+  border: 1px solid #2e2e2e;
+  border-radius: 0.75rem;
+  padding: 0.6rem;
+  transition: border-color 0.15s;
+}
+
+.profile-fav-card:hover {
+  border-color: #3a3a3a;
+}
+
+.profile-fav-img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  flex-shrink: 0;
+  transition: opacity 0.3s ease;
+}
+
+.profile-fav-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-fav-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 0 0 0.15rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-fav-rest {
+  font-size: 0.75rem;
+  color: #22c55e;
+  margin: 0 0 0.15rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-fav-price {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #f59e0b;
+  margin: 0;
+}
+
+.profile-fav-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex-shrink: 0;
+}
+
+.profile-fav-add {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: #22c55e;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.profile-fav-add:hover {
+  background: #16a34a;
+}
+.profile-fav-add.added {
+  background: #166534;
+}
+
+.profile-fav-heart {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #2e2e2e;
+  background: transparent;
+  color: #ef4444;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.profile-fav-heart:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: #ef4444;
+}
+
+.profile-fav-skeleton {
+  height: 72px;
+  background: linear-gradient(90deg, #111 25%, #1a1a1a 50%, #111 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 0.75rem;
+}

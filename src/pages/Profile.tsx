@@ -2,12 +2,34 @@ import { useState, type FormEvent, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
+import { useCart } from '@/context/CartContext';
+import { useFavorites } from '@/context/FavoritesContext';
 import { supabase } from '@/lib/supabase';
-import type { DbAddress } from '@/types/product';
+import LazyImage from '@/components/ui/LazyImage';
+import type { DbAddress, Product, DbMenuItem } from '@/types/product';
 import './Profile.css';
+
+function dbItemToProduct(item: DbMenuItem): Product {
+  return {
+    id: item.id as unknown as number,
+    name: item.name,
+    price: Number(item.price),
+    image: item.image_url ?? '/images/smash-burger.jpg',
+    category: item.category,
+    rating: Number(item.rating),
+    deliveryTime: item.delivery_time,
+    restaurant: item.restaurants?.name ?? '',
+    description: item.description ?? undefined,
+    badge: item.badge_type
+      ? { type: item.badge_type, label: item.badge_label ?? item.badge_type }
+      : undefined,
+  };
+}
 
 export default function Profile() {
   const { user, signOut, refreshProfile } = useAuth();
+  const { addItem } = useCart();
+  const { favorites, toggle } = useFavorites();
 
   const [fullName, setFullName] = useState(user?.profile?.full_name ?? '');
   const [phone, setPhone] = useState(user?.profile?.phone ?? '');
@@ -24,6 +46,11 @@ export default function Profile() {
   const [addingAddr, setAddingAddr] = useState(false);
   const [showAddrForm, setShowAddrForm] = useState(false);
 
+  const [favItems, setFavItems] = useState<Product[]>([]);
+  const [favLoading, setFavLoading] = useState(false);
+  // Track which items just got added to cart for feedback
+  const [addedIds, setAddedIds] = useState<Set<string>>(new Set());
+
   // Load addresses
   useEffect(() => {
     if (!user) return;
@@ -37,6 +64,39 @@ export default function Profile() {
         setLoadingAddr(false);
       });
   }, [user]);
+
+  // Load favorited menu items whenever the favorites set changes
+  useEffect(() => {
+    if (favorites.size === 0) {
+      setFavItems([]);
+      setFavLoading(false);
+      return;
+    }
+    setFavLoading(true);
+    supabase
+      .from('menu_items')
+      .select('*, restaurants(name)')
+      .in('id', Array.from(favorites))
+      .then(({ data }) => {
+        setFavItems((data ?? []).map((d) => dbItemToProduct(d as DbMenuItem)));
+        setFavLoading(false);
+      });
+  }, [favorites]);
+
+  const handleAddFavToCart = (item: Product) => {
+    addItem(item, 1);
+    const key = String(item.id);
+    setAddedIds((prev) => new Set(prev).add(key));
+    setTimeout(
+      () =>
+        setAddedIds((prev) => {
+          const n = new Set(prev);
+          n.delete(key);
+          return n;
+        }),
+      1200
+    );
+  };
 
   const saveProfile = async (e: FormEvent) => {
     e.preventDefault();
@@ -243,6 +303,61 @@ export default function Profile() {
             )}
           </motion.section>
         </div>
+
+        {/* ── FAVORITES ── */}
+        <motion.section
+          className="profile-card profile-favs-section"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <h2 className="profile-card-title">Favorite items ♥</h2>
+
+          {favLoading ? (
+            <div className="profile-favs-grid">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="profile-fav-skeleton" />
+              ))}
+            </div>
+          ) : favItems.length === 0 ? (
+            <p className="profile-no-addr">
+              No favorites yet — heart items on the menu to save them here.
+            </p>
+          ) : (
+            <div className="profile-favs-grid">
+              {favItems.map((item) => {
+                const key = String(item.id);
+                const wasAdded = addedIds.has(key);
+                return (
+                  <div key={key} className="profile-fav-card">
+                    <LazyImage src={item.image} alt={item.name} className="profile-fav-img" />
+                    <div className="profile-fav-body">
+                      <p className="profile-fav-name">{item.name}</p>
+                      {item.restaurant && <p className="profile-fav-rest">{item.restaurant}</p>}
+                      <p className="profile-fav-price">${item.price.toFixed(2)}</p>
+                    </div>
+                    <div className="profile-fav-actions">
+                      <button
+                        className={`profile-fav-add ${wasAdded ? 'added' : ''}`}
+                        onClick={() => handleAddFavToCart(item)}
+                        aria-label={`Add ${item.name} to cart`}
+                      >
+                        {wasAdded ? '✓' : '+'}
+                      </button>
+                      <button
+                        className="profile-fav-heart"
+                        onClick={() => toggle(key)}
+                        aria-label={`Remove ${item.name} from favorites`}
+                      >
+                        ♥
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </motion.section>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import TopBar from '@/components/layout/TopBar';
@@ -8,6 +8,8 @@ import Seo from '@/components/ui/Seo';
 import { getRestaurants } from '@/services/restaurantService';
 import type { DbRestaurant } from '@/types/product';
 import './Restaurants.css';
+
+const PAGE_SIZE = 6;
 
 const CATEGORY_EMOJI: Record<string, string> = {
   burgers: '🍔',
@@ -23,6 +25,8 @@ export default function Restaurants() {
   const [restaurants, setRestaurants] = useState<DbRestaurant[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     getRestaurants()
@@ -35,6 +39,23 @@ export default function Restaurants() {
         setLoading(false);
       });
   }, []);
+
+  // Infinite scroll — observe sentinel div below the grid
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setVisibleCount((c) => c + PAGE_SIZE);
+      },
+      { rootMargin: '200px' }
+    );
+    io.observe(sentinel);
+    return () => io.disconnect();
+  }, [loading]);
+
+  const visible = restaurants.slice(0, visibleCount);
+  const hasMore = visibleCount < restaurants.length;
 
   return (
     <div className="page-root">
@@ -64,12 +85,12 @@ export default function Restaurants() {
 
           {!loading && !error && restaurants.length > 0 && (
             <div className="restaurants-grid">
-              {restaurants.map((r, i) => (
+              {visible.map((r, i) => (
                 <motion.div
                   key={r.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
+                  transition={{ delay: Math.min(i, 5) * 0.05 }}
                 >
                   <Link to={`/restaurants/${r.slug}`} className="restaurant-card">
                     <div className="restaurant-cover">
@@ -111,6 +132,9 @@ export default function Restaurants() {
               ))}
             </div>
           )}
+
+          {/* Infinite scroll sentinel */}
+          {!loading && hasMore && <div ref={sentinelRef} style={{ height: 1 }} />}
         </div>
       </main>
       <Footer />
