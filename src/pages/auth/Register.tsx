@@ -1,12 +1,15 @@
 import { useState, type FormEvent } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
+import Seo from '@/components/ui/Seo';
 import './Auth.css';
 
 export default function Register() {
   const { signUp, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const fromState = (location.state as { from?: Location })?.from;
 
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -45,6 +48,7 @@ export default function Register() {
   if (success) {
     return (
       <div className="auth-page">
+        <Seo title="Check your email" />
         <motion.div
           className="auth-card"
           initial={{ opacity: 0, scale: 0.97 }}
@@ -57,7 +61,12 @@ export default function Register() {
             We sent a confirmation link to <strong>{email}</strong>. Click the link to activate your
             account, then sign in.
           </p>
-          <button className="auth-btn-primary" onClick={() => navigate('/auth/login')}>
+          <button
+            className="auth-btn-primary"
+            onClick={() =>
+              navigate('/auth/login', { state: fromState ? { from: fromState } : undefined })
+            }
+          >
             Go to sign in
           </button>
         </motion.div>
@@ -67,6 +76,7 @@ export default function Register() {
 
   return (
     <div className="auth-page">
+      <Seo title="Create account" description="Join Equilibrium Food and start ordering." />
       <motion.div
         className="auth-card"
         initial={{ opacity: 0, y: 24 }}
@@ -165,7 +175,10 @@ export default function Register() {
         </button>
 
         <p className="auth-footer-text">
-          Already have an account? <Link to="/auth/login">Sign in</Link>
+          Already have an account?{' '}
+          <Link to="/auth/login" state={fromState ? { from: fromState } : undefined}>
+            Sign in
+          </Link>
         </p>
       </motion.div>
     </div>

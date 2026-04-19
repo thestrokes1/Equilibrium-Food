@@ -20,6 +20,7 @@ const Profile = lazy(() => import('@/pages/Profile'));
 const Restaurants = lazy(() => import('@/pages/Restaurants'));
 const RestaurantDetail = lazy(() => import('@/pages/RestaurantDetail'));
 const Admin = lazy(() => import('@/pages/admin/Admin'));
+const TrackOrder = lazy(() => import('@/pages/TrackOrder'));
 
 function PageLoader() {
   return (
@@ -167,6 +168,18 @@ export default function App() {
               <Bounded path="/profile">
                 <AuthGuard>
                   <Profile />
+                </AuthGuard>
+              </Bounded>
+            }
+          />
+
+          {/* Track order */}
+          <Route
+            path="/track-order"
+            element={
+              <Bounded path="/track-order">
+                <AuthGuard>
+                  <TrackOrder />
                 </AuthGuard>
               </Bounded>
             }

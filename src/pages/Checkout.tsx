@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
 import { supabase } from '@/lib/supabase';
 import { FREE_DELIVERY_THRESHOLD, DELIVERY_FEE } from '@/constants';
+import Seo from '@/components/ui/Seo';
 import './Checkout.css';
 
 type Step = 'address' | 'review';
@@ -125,6 +126,7 @@ export default function Checkout() {
 
   return (
     <div className="checkout-page">
+      <Seo title="Checkout" description="Complete your order on Equilibrium Food." />
       <div className="checkout-container">
         {/* Header */}
         <div className="checkout-header">

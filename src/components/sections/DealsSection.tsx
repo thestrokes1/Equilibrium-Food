@@ -24,6 +24,16 @@ const SECONDARY_DEALS = [
     category: 'sushi',
     cta: 'Shop sushi →',
   },
+  {
+    id: 'vegan',
+    icon: '🥗',
+    title: 'Vegan Delight',
+    desc: 'New plant-based arrivals every week',
+    discount: 'New arrival',
+    discountColor: '#22c55e',
+    category: 'vegan',
+    cta: 'Shop vegan →',
+  },
 ];
 
 const sectionVariants = {

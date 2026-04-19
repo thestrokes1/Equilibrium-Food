@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
@@ -14,19 +14,29 @@ interface NavLink {
 }
 
 const NAV_LINKS: NavLink[] = [
-  { label: 'Menu', href: '#menu', soon: false },
+  { label: 'Menu', href: '/#menu', internal: true, soon: false },
   { label: 'Restaurants', href: '/restaurants', internal: true, soon: false },
-  { label: 'Deals', href: '#deals', soon: false },
-  { label: 'Track order', href: null, soon: true },
+  { label: 'Deals', href: '/#deals', internal: true, soon: false },
+  { label: 'Track order', href: '/track-order', internal: true, soon: false },
 ];
 
 export default function Navbar() {
   const { totalItems, setIsOpen } = useCart();
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const { supported: notifSupported, subscribed, subscribe, unsubscribe } = useNotifications();
+
+  const handleAnchorLink = (href: string) => (e: import('react').MouseEvent) => {
+    const hash = href.split('#')[1];
+    if (!hash) return;
+    if (location.pathname === '/') {
+      e.preventDefault();
+      document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   const handleSignOut = async () => {
     setUserMenuOpen(false);
@@ -59,7 +69,11 @@ export default function Navbar() {
                   <span className="nav-soon-badge">Soon</span>
                 </span>
               ) : link.internal ? (
-                <Link to={link.href!} className="nav-link">
+                <Link
+                  to={link.href!}
+                  className="nav-link"
+                  onClick={link.href?.includes('#') ? handleAnchorLink(link.href) : undefined}
+                >
                   {link.label}
                 </Link>
               ) : (
@@ -187,7 +201,10 @@ export default function Navbar() {
                   key={link.label}
                   to={link.href!}
                   className="mobile-link"
-                  onClick={() => setMobileOpen(false)}
+                  onClick={(e) => {
+                    setMobileOpen(false);
+                    if (link.href?.includes('#')) handleAnchorLink(link.href!)(e);
+                  }}
                 >
                   {link.label}
                 </Link>

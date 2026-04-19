@@ -4,10 +4,10 @@ import './Footer.css';
 
 const LINKS = {
   explore: [
-    { label: 'Menu', href: '#menu' },
-    { label: 'Deals', href: '#deals' },
-    { label: 'Restaurants', href: '#' },
-    { label: 'Track order', href: '#' },
+    { label: 'Menu', href: '/#menu' },
+    { label: 'Deals', href: '/#deals' },
+    { label: 'Restaurants', href: '/restaurants' },
+    { label: 'Track order', href: '/track-order' },
   ],
   company: [
     { label: 'About us', href: '#' },
@@ -30,6 +30,11 @@ const SOCIALS = [
 
 export default function Footer() {
   const { addToast } = useToast();
+
+  const handleComingSoon = (label: string) => (e: import('react').MouseEvent) => {
+    e.preventDefault();
+    addToast({ title: `${label} — coming soon!`, icon: '🚧', type: 'info' });
+  };
 
   const handleNewsletter = (e: import('react').FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -74,16 +79,27 @@ export default function Footer() {
         <div className="footer-links-grid">
           <div className="footer-col">
             <p className="footer-col-title">Explore</p>
-            {LINKS.explore.map((l) => (
-              <a key={l.label} href={l.href} className="footer-link">
-                {l.label}
-              </a>
-            ))}
+            {LINKS.explore.map((l) =>
+              l.href.startsWith('/') ? (
+                <Link key={l.label} to={l.href} className="footer-link">
+                  {l.label}
+                </Link>
+              ) : (
+                <a key={l.label} href={l.href} className="footer-link">
+                  {l.label}
+                </a>
+              )
+            )}
           </div>
           <div className="footer-col">
             <p className="footer-col-title">Company</p>
             {LINKS.company.map((l) => (
-              <a key={l.label} href={l.href} className="footer-link">
+              <a
+                key={l.label}
+                href={l.href}
+                className="footer-link footer-link-soon"
+                onClick={handleComingSoon(l.label)}
+              >
                 {l.label}
               </a>
             ))}
@@ -91,7 +107,12 @@ export default function Footer() {
           <div className="footer-col">
             <p className="footer-col-title">Legal</p>
             {LINKS.legal.map((l) => (
-              <a key={l.label} href={l.href} className="footer-link">
+              <a
+                key={l.label}
+                href={l.href}
+                className="footer-link footer-link-soon"
+                onClick={handleComingSoon(l.label)}
+              >
                 {l.label}
               </a>
             ))}

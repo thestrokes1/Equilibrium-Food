@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
+import Seo from '@/components/ui/Seo';
 import './Auth.css';
 
 export default function Login() {
@@ -41,12 +42,31 @@ export default function Login() {
 
   return (
     <div className="auth-page">
+      <Seo title="Sign in" description="Sign in to your Equilibrium Food account." />
       <motion.div
         className="auth-card"
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35 }}
       >
+        <button
+          type="button"
+          className="auth-back-btn"
+          onClick={() => navigate(-1)}
+          aria-label="Go back"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path
+              d="M10 3L5 8L10 13"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          Back
+        </button>
+
         <Link to="/" className="auth-logo">
           Equilibrium<span className="auth-logo-dot">.</span>
         </Link>

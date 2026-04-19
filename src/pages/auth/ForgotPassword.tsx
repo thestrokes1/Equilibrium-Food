@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
+import Seo from '@/components/ui/Seo';
 import './Auth.css';
 
 export default function ForgotPassword() {
@@ -26,6 +27,7 @@ export default function ForgotPassword() {
 
   return (
     <div className="auth-page">
+      <Seo title="Reset password" description="Reset your Equilibrium Food account password." />
       <motion.div
         className="auth-card"
         initial={{ opacity: 0, y: 24 }}

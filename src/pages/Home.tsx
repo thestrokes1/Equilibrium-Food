@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useCart } from '@/context/CartContext';
 import TopBar from '@/components/layout/TopBar';
 import Navbar from '@/components/layout/Navbar';
@@ -17,6 +18,7 @@ export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [dataLoading, setDataLoading] = useState(true);
   const { addItem } = useCart();
+  const location = useLocation();
 
   useEffect(() => {
     getProducts().then((data) => {
@@ -24,6 +26,15 @@ export default function Home() {
       setDataLoading(false);
     });
   }, []);
+
+  useEffect(() => {
+    if (!location.hash) return;
+    const id = location.hash.slice(1);
+    const el = document.getElementById(id);
+    if (el) {
+      setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 80);
+    }
+  }, [location.hash]);
 
   const categories = Array.from(new Set(products.map((p) => p.category)));
 
