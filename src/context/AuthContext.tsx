@@ -32,31 +32,45 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    // Initial session load
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
+    let loadingResolved = false;
+
+    const resolveLoading = () => {
+      if (!loadingResolved) {
+        loadingResolved = true;
+        setLoading(false);
+      }
+    };
+
+    // Safety net: never spin longer than 5 seconds regardless of network state
+    const safetyTimer = setTimeout(resolveLoading, 5000);
+
+    // onAuthStateChange fires INITIAL_SESSION from localStorage (no Web Lock needed),
+    // avoiding the token-refresh lock contention that caused getSession() to hang.
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       try {
         if (session?.user) {
           const profile = await fetchProfile(session.user.id);
           setUser({ id: session.user.id, email: session.user.email, profile });
+        } else {
+          setUser(null);
+        }
+      } catch {
+        if (session?.user) {
+          setUser({ id: session.user.id, email: session.user.email, profile: null });
+        } else {
+          setUser(null);
         }
       } finally {
-        setLoading(false);
+        resolveLoading();
       }
     });
 
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (session?.user) {
-        const profile = await fetchProfile(session.user.id);
-        setUser({ id: session.user.id, email: session.user.email, profile });
-      } else {
-        setUser(null);
-      }
-    });
-
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(safetyTimer);
+    };
   }, []);
 
   const signIn = useCallback(async (email: string, password: string) => {
