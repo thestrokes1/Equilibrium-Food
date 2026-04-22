@@ -23,8 +23,9 @@ const {
   mockResetPasswordForEmail: vi.fn().mockResolvedValue({ error: null }),
   mockUpdateUser: vi.fn().mockResolvedValue({ error: null }),
   mockGetSession: vi.fn().mockResolvedValue({ data: { session: null } }),
-  mockOnAuthStateChange: vi.fn().mockReturnValue({
-    data: { subscription: { unsubscribe: vi.fn() } },
+  mockOnAuthStateChange: vi.fn().mockImplementation((callback) => {
+    callback('INITIAL_SESSION', null);
+    return { data: { subscription: { unsubscribe: vi.fn() } } };
   }),
 }));
 
@@ -73,8 +74,9 @@ describe('AuthContext', () => {
     localStorage.clear();
     vi.clearAllMocks();
     mockGetSession.mockResolvedValue({ data: { session: null } });
-    mockOnAuthStateChange.mockReturnValue({
-      data: { subscription: { unsubscribe: vi.fn() } },
+    mockOnAuthStateChange.mockImplementation((callback) => {
+      callback('INITIAL_SESSION', null);
+      return { data: { subscription: { unsubscribe: vi.fn() } } };
     });
   });
 
