@@ -5,8 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/context/ToastContext';
 import { supabase } from '@/lib/supabase';
-import TopBar from '@/components/layout/TopBar';
-import Navbar from '@/components/layout/Navbar';
+import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Seo from '@/components/ui/Seo';
 import StarRating from '@/components/ui/StarRating';
@@ -148,8 +147,7 @@ export default function OrderDetail() {
 
   const layout = (content: import('react').ReactNode) => (
     <div className="page-root">
-      <TopBar />
-      <Navbar />
+      <Header />
       <Seo title="Order detail" />
       <main className="orders-page">
         <div className="orders-container">{content}</div>
@@ -178,8 +176,7 @@ export default function OrderDetail() {
 
   return (
     <div className="page-root">
-      <TopBar />
-      <Navbar />
+      <Header />
       <Seo title={`Order #${order.id.slice(0, 8).toUpperCase()}`} />
       <main className="orders-page">
         <div className="orders-container">

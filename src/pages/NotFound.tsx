@@ -1,15 +1,13 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import TopBar from '@/components/layout/TopBar';
-import Navbar from '@/components/layout/Navbar';
+import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Seo from '@/components/ui/Seo';
 
 export default function NotFound() {
   return (
     <div className="page-root">
-      <TopBar />
-      <Navbar />
+      <Header />
       <Seo title="Page not found" description="This page doesn't exist." />
       <main>
         <motion.div

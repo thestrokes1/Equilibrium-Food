@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
-import TopBar from '@/components/layout/TopBar';
-import Navbar from '@/components/layout/Navbar';
+import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Seo from '@/components/ui/Seo';
 import type { DbOrder } from '@/types/product';
@@ -48,8 +47,7 @@ export default function Orders() {
 
   return (
     <div className="page-root">
-      <TopBar />
-      <Navbar />
+      <Header />
       <Seo title="Your orders" description="Track and manage your Equilibrium Food orders." />
       <main className="orders-page">
         <div className="orders-container">

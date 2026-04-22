@@ -5,8 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
 import { useFavorites } from '@/context/FavoritesContext';
 import { supabase } from '@/lib/supabase';
-import TopBar from '@/components/layout/TopBar';
-import Navbar from '@/components/layout/Navbar';
+import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Seo from '@/components/ui/Seo';
 import LazyImage from '@/components/ui/LazyImage';
@@ -152,8 +151,7 @@ export default function Profile() {
 
   return (
     <div className="page-root">
-      <TopBar />
-      <Navbar />
+      <Header />
       <Seo title="My profile" description="Manage your profile, addresses and favorites." />
       <div className="profile-page">
         <div className="profile-container">

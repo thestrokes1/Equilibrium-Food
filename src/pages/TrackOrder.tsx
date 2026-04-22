@@ -3,8 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
-import TopBar from '@/components/layout/TopBar';
-import Navbar from '@/components/layout/Navbar';
+import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Seo from '@/components/ui/Seo';
 import type { DbOrder } from '@/types/product';
@@ -40,8 +39,7 @@ export default function TrackOrder() {
 
   return (
     <div className="page-root">
-      <TopBar />
-      <Navbar />
+      <Header />
       <Seo
         title="Track order"
         description="Track your active Equilibrium Food order in real time."

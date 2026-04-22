@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import TopBar from '@/components/layout/TopBar';
-import Navbar from '@/components/layout/Navbar';
+import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Seo from '@/components/ui/Seo';
 import { getRestaurants } from '@/services/restaurantService';
@@ -60,8 +59,7 @@ export default function Restaurants() {
   return (
     <div className="page-root">
       <Seo title="Restaurants" description="Browse all restaurants on Equilibrium Food." />
-      <TopBar />
-      <Navbar />
+      <Header />
       <main className="restaurants-page">
         <div className="restaurants-container">
           <div className="restaurants-header">

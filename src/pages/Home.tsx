@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useCart } from '@/context/CartContext';
-import TopBar from '@/components/layout/TopBar';
-import Navbar from '@/components/layout/Navbar';
+import Header from '@/components/layout/Header';
 import Hero from '@/components/sections/Hero';
 import MenuSection from '@/components/sections/MenuSection';
 import DealsSection from '@/components/sections/DealsSection';
@@ -56,8 +55,7 @@ export default function Home() {
   return (
     <div className="page-root">
       <Seo />
-      <TopBar />
-      <Navbar />
+      <Header />
       <main>
         <Hero onSelectCategory={setSelectedCategory} />
         <MenuSection

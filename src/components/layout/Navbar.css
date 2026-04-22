@@ -6,9 +6,6 @@
   background: #0d0d0d;
   border-bottom: 1px solid #1a1a1a;
   font-family: 'Outfit', sans-serif;
-  position: sticky;
-  top: 37px;
-  z-index: 99;
 }
 
 .nav-logo {
@@ -204,8 +201,6 @@
 /* Mobile dropdown */
 .mobile-menu {
   display: none;
-  position: sticky;
-  top: 101px; /* topbar + navbar height */
   z-index: 98;
   background: #111111;
   border-bottom: 1px solid #1e1e1e;

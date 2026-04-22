@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import TopBar from '@/components/layout/TopBar';
-import Navbar from '@/components/layout/Navbar';
+import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Seo from '@/components/ui/Seo';
 import FoodCard from '@/components/product/FoodCard';
@@ -39,8 +38,7 @@ export default function RestaurantDetail() {
   if (notFound) {
     return (
       <div className="page-root">
-        <TopBar />
-        <Navbar />
+        <Header />
         <main className="rd-page">
           <div className="rd-container">
             <h2 className="rd-not-found">Restaurant not found</h2>
@@ -60,8 +58,7 @@ export default function RestaurantDetail() {
         title={restaurant?.name ?? 'Restaurant'}
         description={restaurant?.description ?? undefined}
       />
-      <TopBar />
-      <Navbar />
+      <Header />
       <main className="rd-page">
         {/* Hero banner */}
         <div className="rd-hero">

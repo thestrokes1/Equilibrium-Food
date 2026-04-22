@@ -7,9 +7,6 @@
   font-size: 12px;
   color: #888888;
   font-family: 'Outfit', sans-serif;
-  position: sticky;
-  top: 0;
-  z-index: 100;
   gap: 16px;
 }
 
@@ -29,8 +26,12 @@
 }
 
 @keyframes tick {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 /* ── LOCATION: right side, always visible ── */
@@ -65,13 +66,22 @@
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.3; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
 }
 
 /* Full text visible on desktop */
-.location-full  { display: inline; }
-.location-short { display: none;   }
+.location-full {
+  display: inline;
+}
+.location-short {
+  display: none;
+}
 
 /* ── MOBILE: ticker stays, location shrinks to city only ── */
 @media (max-width: 550px) {
@@ -80,10 +90,18 @@
     gap: 10px;
   }
 
-  .ticker { font-size: 11px; }
+  .ticker {
+    font-size: 11px;
+  }
 
-  .topbar-location { font-size: 11px; }
+  .topbar-location {
+    font-size: 11px;
+  }
 
-  .location-full  { display: none;   }
-  .location-short { display: inline; }
+  .location-full {
+    display: none;
+  }
+  .location-short {
+    display: inline;
+  }
 }
