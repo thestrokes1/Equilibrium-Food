@@ -129,6 +129,7 @@ export interface AuthUser {
 export interface AuthContextValue {
   user: AuthUser | null;
   loading: boolean;
+  profileReady: boolean;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;

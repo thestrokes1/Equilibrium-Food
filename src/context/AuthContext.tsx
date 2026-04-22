@@ -18,6 +18,7 @@ async function fetchProfile(userId: string): Promise<DbProfile | null> {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const [profileReady, setProfileReady] = useState(false);
 
   const refreshProfile = useCallback(async () => {
     const {
@@ -49,20 +50,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      try {
-        if (session?.user) {
+      if (session?.user) {
+        // Immediately mark authenticated — unblocks auth guards without waiting for profile
+        setUser({ id: session.user.id, email: session.user.email, profile: null });
+        setProfileReady(false);
+        resolveLoading();
+        // Fetch profile in background; update user once ready
+        try {
           const profile = await fetchProfile(session.user.id);
           setUser({ id: session.user.id, email: session.user.email, profile });
-        } else {
-          setUser(null);
+        } catch {
+          // profile stays null — user remains authenticated
+        } finally {
+          setProfileReady(true);
         }
-      } catch {
-        if (session?.user) {
-          setUser({ id: session.user.id, email: session.user.email, profile: null });
-        } else {
-          setUser(null);
-        }
-      } finally {
+      } else {
+        setUser(null);
+        setProfileReady(true);
         resolveLoading();
       }
     });
@@ -117,6 +121,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       value={{
         user,
         loading,
+        profileReady,
         signIn,
         signUp,
         signOut,

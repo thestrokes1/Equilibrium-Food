@@ -3,9 +3,9 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 
 export default function AdminGuard({ children }: { children: ReactNode }) {
-  const { user, loading } = useAuth();
+  const { user, loading, profileReady } = useAuth();
 
-  if (loading) return <PageSpinner />;
+  if (loading || !profileReady) return <PageSpinner />;
   if (!user) return <Navigate to="/auth/login" replace />;
   if (user.profile?.role !== 'admin') return <Navigate to="/" replace />;
 
