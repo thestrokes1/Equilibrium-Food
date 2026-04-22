@@ -668,78 +668,168 @@
   gap: 0.5rem;
 }
 
-.img-field-preview {
-  position: relative;
-  width: fit-content;
+/* Drop zone (no image yet) */
+.img-field-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 1.5rem 1rem;
+  border: 2px dashed #3a3a3a;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+  background: #111;
+  text-align: center;
+  min-height: 110px;
+}
+.img-field-dropzone:hover,
+.img-field-dropzone:focus-visible {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.05);
+  outline: none;
+}
+.img-field-dropzone--drag {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
 }
 
-.img-field-thumb {
-  width: 80px;
+.img-field-drop-icon {
+  color: #666;
+  flex-shrink: 0;
+}
+.img-field-dropzone:hover .img-field-drop-icon,
+.img-field-dropzone--drag .img-field-drop-icon {
+  color: #f59e0b;
+}
+
+.img-field-drop-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #d1d1d1;
+}
+
+.img-field-drop-hint {
+  font-size: 0.72rem;
+  color: #666;
+}
+
+/* Filled state (image present) */
+.img-field-filled {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem;
+  background: #111;
+  border: 1px solid #2e2e2e;
+  border-radius: 0.75rem;
+}
+
+.img-field-thumb-lg {
+  width: 72px;
   height: 56px;
   object-fit: cover;
   border-radius: 0.5rem;
-  border: 1px solid #2e2e2e;
+  flex-shrink: 0;
   display: block;
 }
 
-.img-field-clear {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #ef4444;
-  border: none;
-  color: #fff;
-  font-size: 0.6rem;
-  line-height: 1;
+.img-field-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.img-field-action-btn {
   display: flex;
   align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  padding: 0;
-  transition: opacity 0.15s;
-}
-.img-field-clear:hover {
-  opacity: 0.85;
-}
-
-.img-field-row {
-  display: flex;
-  gap: 0.4rem;
-  align-items: center;
-}
-
-.img-field-url {
-  flex: 1;
-}
-
-.img-field-upload-btn {
-  background: #1a1a1a;
+  gap: 0.3rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 0.45rem;
   border: 1px solid #3a3a3a;
-  border-radius: 0.5rem;
-  color: #f59e0b;
-  font-size: 0.9rem;
-  font-weight: 700;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: #1a1a1a;
+  color: #d1d1d1;
+  font-size: 0.75rem;
+  font-weight: 500;
   cursor: pointer;
-  flex-shrink: 0;
   transition:
     border-color 0.15s,
     background 0.15s;
 }
-.img-field-upload-btn:hover:not(:disabled) {
+.img-field-action-btn:hover:not(:disabled) {
   border-color: #f59e0b;
+  color: #f59e0b;
   background: rgba(245, 158, 11, 0.08);
 }
-.img-field-upload-btn:disabled {
+.img-field-action-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+.img-field-action-remove:hover:not(:disabled) {
+  border-color: #ef4444;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+}
+
+/* URL input toggle */
+.img-field-url-toggle {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 0.72rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  text-align: left;
+}
+.img-field-url-toggle:hover {
+  color: #f59e0b;
+}
+
+.img-field-url-row {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+.img-field-url-cancel {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0.2rem 0.4rem;
+}
+.img-field-url-cancel:hover {
+  color: #ef4444;
+}
+
+/* Spinner */
+.img-field-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #3a3a3a;
+  border-top-color: #f59e0b;
+  border-radius: 50%;
+  animation: img-spin 0.7s linear infinite;
+  display: inline-block;
+}
+.img-field-spinner--lg {
+  width: 28px;
+  height: 28px;
+  border-width: 2.5px;
+}
+@keyframes img-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.img-field-drop-text {
+  font-size: 0.875rem;
+  color: #888;
 }
 
 .img-field-hidden {
