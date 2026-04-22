@@ -61,6 +61,13 @@
   .profile-grid {
     grid-template-columns: 1fr;
   }
+  .profile-page {
+    padding: 1.25rem 1rem 3rem;
+  }
+  .profile-card {
+    padding: 1.25rem;
+    border-radius: 1rem;
+  }
 }
 
 .profile-card {

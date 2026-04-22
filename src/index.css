@@ -11,6 +11,7 @@ body {
   background: #0d0d0d;
   color: #f0ede6;
   margin: 0;
+  overflow-x: hidden;
 }
 
 .page-root {

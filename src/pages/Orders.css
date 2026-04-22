@@ -651,6 +651,82 @@
   color: #d4d4d4;
 }
 
+/* ── Mobile ────────────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .orders-page {
+    padding: 1.25rem 1rem 3rem;
+  }
+
+  .orders-title {
+    font-size: 1.4rem;
+  }
+
+  /* Order card */
+  .order-card {
+    padding: 1rem;
+  }
+
+  /* Detail nav — stack on very small screens */
+  .order-detail-nav {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .order-back-link {
+    margin-bottom: 0;
+  }
+
+  .order-detail-actions {
+    gap: 0.4rem;
+  }
+
+  .order-action-btn {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.65rem;
+  }
+
+  /* Detail card */
+  .order-detail-card {
+    padding: 1.25rem 1rem;
+    border-radius: 1rem;
+  }
+
+  /* Header: stack id/date above total */
+  .order-detail-header {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .order-detail-id {
+    font-size: 1.15rem;
+  }
+
+  .order-detail-total {
+    font-size: 1.2rem;
+  }
+
+  /* Timeline: shrink labels slightly */
+  .order-timeline-label {
+    font-size: 0.62rem;
+  }
+
+  .order-timeline-dot {
+    width: 30px;
+    height: 30px;
+    font-size: 0.85rem;
+  }
+
+  .order-timeline-line {
+    top: 15px;
+    left: calc(50% + 15px);
+    width: calc(100% - 30px);
+  }
+
+  .order-timeline-step {
+    min-width: 58px;
+  }
+}
+
 /* ── Print styles ────────────────────────────────────────────────────────────── */
 @media print {
   body {
