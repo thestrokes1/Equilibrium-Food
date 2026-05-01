@@ -142,11 +142,13 @@ export default function Admin() {
   }, []);
 
   // ── Orders ─────────────────────────────────────────────────────────────────
+  const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
+
   const loadOrders = useCallback(() => {
     setLoadingOrders(true);
     supabase
       .from('orders')
-      .select('*')
+      .select('*, order_items(*)')
       .order('created_at', { ascending: false })
       .limit(100)
       .then(({ data }) => {
@@ -494,50 +496,105 @@ export default function Admin() {
                     <tr>
                       <th>Order ID</th>
                       <th>Date</th>
+                      <th>Items</th>
                       <th>Total</th>
                       <th>Status</th>
                       <th>Change status</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredOrders.map((order) => (
-                      <tr key={order.id}>
-                        <td className="admin-order-id">#{order.id.slice(0, 8).toUpperCase()}</td>
-                        <td className="admin-order-date">
-                          {new Date(order.created_at).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })}
-                        </td>
-                        <td className="admin-order-total">${Number(order.total).toFixed(2)}</td>
-                        <td>
-                          <span
-                            className="admin-status-badge"
-                            style={{ color: STATUS_COLOR[order.status] ?? '#a3a3a3' }}
-                          >
-                            {order.status.replace('_', ' ')}
-                          </span>
-                        </td>
-                        <td>
-                          <select
-                            className="admin-select admin-select--sm"
-                            value={order.status}
-                            disabled={updatingOrder === order.id}
-                            onChange={(e) =>
-                              updateOrderStatus(order.id, e.target.value as OrderStatus)
-                            }
-                          >
-                            {STATUS_OPTIONS.map((s) => (
-                              <option key={s} value={s}>
-                                {s.replace('_', ' ')}
-                              </option>
-                            ))}
-                          </select>
-                        </td>
-                      </tr>
-                    ))}
+                    {filteredOrders.map((order) => {
+                      const isExpanded = expandedOrderId === order.id;
+                      const itemCount = order.order_items?.length ?? 0;
+                      return (
+                        <>
+                          <tr key={order.id}>
+                            <td className="admin-order-id">
+                              #{order.id.slice(0, 8).toUpperCase()}
+                            </td>
+                            <td className="admin-order-date">
+                              {new Date(order.created_at).toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              })}
+                            </td>
+                            <td>
+                              <button
+                                className={`admin-expand-btn ${isExpanded ? 'open' : ''}`}
+                                onClick={() => setExpandedOrderId(isExpanded ? null : order.id)}
+                              >
+                                {itemCount} item{itemCount !== 1 ? 's' : ''}{' '}
+                                <span className="admin-expand-arrow">{isExpanded ? '▲' : '▼'}</span>
+                              </button>
+                            </td>
+                            <td className="admin-order-total">${Number(order.total).toFixed(2)}</td>
+                            <td>
+                              <span
+                                className="admin-status-badge"
+                                style={{ color: STATUS_COLOR[order.status] ?? '#a3a3a3' }}
+                              >
+                                {order.status.replace('_', ' ')}
+                              </span>
+                            </td>
+                            <td>
+                              <select
+                                className="admin-select admin-select--sm"
+                                value={order.status}
+                                disabled={updatingOrder === order.id}
+                                onChange={(e) =>
+                                  updateOrderStatus(order.id, e.target.value as OrderStatus)
+                                }
+                              >
+                                {STATUS_OPTIONS.map((s) => (
+                                  <option key={s} value={s}>
+                                    {s.replace('_', ' ')}
+                                  </option>
+                                ))}
+                              </select>
+                            </td>
+                          </tr>
+                          {isExpanded && (
+                            <tr key={`${order.id}-detail`} className="admin-order-detail-row">
+                              <td colSpan={6}>
+                                <div className="admin-order-detail">
+                                  {order.order_items && order.order_items.length > 0 ? (
+                                    <ul className="admin-order-items-list">
+                                      {order.order_items.map((item) => (
+                                        <li key={item.id} className="admin-order-item-row">
+                                          <span className="admin-order-item-qty">{item.qty}×</span>
+                                          <span className="admin-order-item-name">
+                                            {item.item_name}
+                                          </span>
+                                          <span className="admin-order-item-price">
+                                            ${(item.unit_price * item.qty).toFixed(2)}
+                                          </span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  ) : (
+                                    <p className="admin-order-no-items">No items recorded</p>
+                                  )}
+                                  {order.notes && (
+                                    <p className="admin-order-meta">
+                                      <span className="admin-order-meta-label">Note:</span>{' '}
+                                      {order.notes}
+                                    </p>
+                                  )}
+                                  {order.address_snapshot && (
+                                    <p className="admin-order-meta">
+                                      <span className="admin-order-meta-label">Deliver to:</span>{' '}
+                                      {order.address_snapshot.street}, {order.address_snapshot.city}
+                                    </p>
+                                  )}
+                                </div>
+                              </td>
+                            </tr>
+                          )}
+                        </>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
