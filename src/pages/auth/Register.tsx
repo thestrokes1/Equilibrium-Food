@@ -48,7 +48,7 @@ export default function Register() {
   if (success) {
     return (
       <div className="auth-page">
-        <Seo title="Check your email" />
+        <Seo title="Check your email" noindex />
         <motion.div
           className="auth-card"
           initial={{ opacity: 0, scale: 0.97 }}

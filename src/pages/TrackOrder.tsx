@@ -43,6 +43,7 @@ export default function TrackOrder() {
       <Seo
         title="Track order"
         description="Track your active Equilibrium Food order in real time."
+        noindex
       />
       <main className="orders-page">
         <div className="orders-container">

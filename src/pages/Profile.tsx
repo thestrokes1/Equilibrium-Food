@@ -152,7 +152,7 @@ export default function Profile() {
   return (
     <div className="page-root">
       <Header />
-      <Seo title="My profile" description="Manage your profile, addresses and favorites." />
+      <Seo title="My profile" description="Manage your profile, addresses and favorites." noindex />
       <div className="profile-page">
         <div className="profile-container">
           <div className="profile-header">

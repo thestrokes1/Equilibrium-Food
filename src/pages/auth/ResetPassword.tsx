@@ -43,6 +43,7 @@ export default function ResetPassword() {
       <Seo
         title="Set new password"
         description="Choose a new password for your Equilibrium Food account."
+        noindex
       />
       <motion.div
         className="auth-card"

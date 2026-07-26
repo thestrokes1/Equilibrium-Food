@@ -126,7 +126,7 @@ export default function Checkout() {
 
   return (
     <div className="checkout-page">
-      <Seo title="Checkout" description="Complete your order on Equilibrium Food." />
+      <Seo title="Checkout" description="Complete your order on Equilibrium Food." noindex />
       <div className="checkout-container">
         {/* Header */}
         <div className="checkout-header">

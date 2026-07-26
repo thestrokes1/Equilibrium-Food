@@ -48,7 +48,11 @@ export default function Orders() {
   return (
     <div className="page-root">
       <Header />
-      <Seo title="Your orders" description="Track and manage your Equilibrium Food orders." />
+      <Seo
+        title="Your orders"
+        description="Track and manage your Equilibrium Food orders."
+        noindex
+      />
       <main className="orders-page">
         <div className="orders-container">
           {loading ? (

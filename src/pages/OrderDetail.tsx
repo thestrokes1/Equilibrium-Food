@@ -148,7 +148,7 @@ export default function OrderDetail() {
   const layout = (content: import('react').ReactNode) => (
     <div className="page-root">
       <Header />
-      <Seo title="Order detail" />
+      <Seo title="Order detail" noindex />
       <main className="orders-page">
         <div className="orders-container">{content}</div>
       </main>
@@ -177,7 +177,7 @@ export default function OrderDetail() {
   return (
     <div className="page-root">
       <Header />
-      <Seo title={`Order #${order.id.slice(0, 8).toUpperCase()}`} />
+      <Seo title={`Order #${order.id.slice(0, 8).toUpperCase()}`} noindex />
       <main className="orders-page">
         <div className="orders-container">
           <div className="order-detail-nav">

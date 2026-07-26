@@ -8,7 +8,7 @@ export default function NotFound() {
   return (
     <div className="page-root">
       <Header />
-      <Seo title="Page not found" description="This page doesn't exist." />
+      <Seo title="Page not found" description="This page doesn't exist." noindex />
       <main>
         <motion.div
           initial={{ opacity: 0, y: 20 }}

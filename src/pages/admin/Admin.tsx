@@ -347,7 +347,7 @@ export default function Admin() {
 
   return (
     <div className="admin-page">
-      <Seo title="Admin" description="Admin panel" />
+      <Seo title="Admin" description="Admin panel" noindex />
       <div className="admin-header">
         <div className="admin-header-inner">
           <div>
