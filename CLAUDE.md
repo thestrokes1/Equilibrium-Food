@@ -1,7 +1,7 @@
 # CLAUDE.md — Equilibrium Food
 
 ## Estado actual
-App full-stack live en Vercel. Auth completo (email + forgot/reset password). Checkout → Orders → OrderDetail con realtime tracking, print ticket, re-order y **order ratings** (1-5 estrellas + comentario, editable). Admin panel completo con 4 tabs (Dashboard con reviews panel · Orders con realtime · Menu CRUD · Restaurants CRUD). Favoritos con Supabase. LazyImage con IntersectionObserver. 52 tests en 7 archivos, 0 lint errors, 9 migraciones, 0 advisor warnings. Navegación/redirects auditada y corregida (M8). Layout completo en todas las páginas (Orders, OrderDetail, Profile, NotFound). TrackOrder page activa.
+App full-stack live en Vercel. Auth completo (email + forgot/reset password). Checkout → Orders → OrderDetail con realtime tracking, print ticket, re-order y **order ratings** (1-5 estrellas + comentario, editable). Admin panel completo con 4 tabs (Dashboard con reviews panel · Orders con realtime · Menu CRUD · Restaurants CRUD). Favoritos con Supabase. LazyImage con IntersectionObserver. 52 tests en 7 archivos, 0 lint errors, 9 migraciones, 0 advisor warnings. Navegación/redirects auditada y corregida (M8). Layout completo en todas las páginas (Orders, OrderDetail, Profile, NotFound). TrackOrder page activa. SEO migrado al dominio propio `www.equilibriumfood.ar` (canonical por página, JSON-LD, sitemap, noindex en páginas privadas, 308 desde el alias de Vercel) — falta solo dar de alta Google Search Console (G1).
 
 ---
 
@@ -50,6 +50,9 @@ npm run build
 - **Footer coming soon**: Links de Company y Legal muestran toast `info` "X — coming soon!" via `handleComingSoon`. Footer `Track order` también vinculado a `/track-order`.
 - **Deals section**: Añadido deal "Vegan Delight" (tercer card) para coincidir con TopBar ticker "🥗 Vegan Delight new arrival".
 - **SEO universal**: `<Seo>` en todos los pages — Orders ("Your orders"), OrderDetail ("Order #…"), Profile ("My profile"), TrackOrder ("Track order"), NotFound ("Page not found"), Checkout ("Checkout"), Login ("Sign in"), Register ("Create account" / "Check your email"), ForgotPassword ("Reset password"), ResetPassword ("Set new password").
+- **SEO dominio propio**: `SITE_URL = 'https://www.equilibriumfood.ar'` es la única fuente de verdad en `src/components/ui/Seo.tsx`. El componente hace upsert de `<link rel="canonical">` por página (vía `useLocation`, sin query/hash), `og:title/description/url/image` y `twitter:*`. Prop `noindex` → `robots: noindex, nofollow`; activa en admin, checkout, orders, order detail, profile, track-order, reset-password, register-confirm y 404. `index.html` tiene el canonical estático + JSON-LD (`Organization` + `WebSite`).
+- **Anti-duplicado Vercel**: `vercel.json` tiene un `redirects` con `has: [{ type: 'host', value: 'equilibrium-food.vercel.app' }]` → `https://www.equilibriumfood.ar/$1` (`permanent: true`, Vercel lo emite como **308**). Match de host exacto a propósito: los previews de rama (`equilibrium-food-git-*.vercel.app`) NO se redirigen y siguen usables para testing.
+- **Limitación SPA**: el HTML inicial va vacío y el contenido lo pinta React con datos de Supabase. Googlebot ejecuta JS así que indexa, pero más lento y menos fiable que HTML pre-renderizado. Si los restaurantes individuales necesitan rankear, el paso es pre-render (`vite-plugin-ssg`) o SSR.
 - **Footer Track order**: Link en columna Explore apunta a `/track-order` (interno con `<Link>`).
 
 ---
@@ -90,11 +93,19 @@ npm run build
 - [x] M8 · Audit navegación/redirects: Navbar Menu+Deals funcionan desde cualquier ruta · Footer Restaurants corregido · Register preserva from state
 - [x] M9 · Layout universal: TopBar+Navbar+Footer en Orders/OrderDetail/Profile/NotFound · Track order → /track-order real page · Footer coming-soon toast · Vegan deal en DealsSection
 - [x] M10 · SEO en los 10 pages faltantes · Footer Track order → /track-order · build + lint 0 errores
+- [x] M11 · Migración SEO a `equilibriumfood.ar` (commit `1038a72`): canonical/og/sitemap/robots apuntaban al host viejo `equilibrium-food.vercel.app`, o sea que Google tomaba la URL de Vercel como canónica y el dominio propio como contenido duplicado. Corregido `index.html` (canonical + og:url + og:image absolutas + robots meta + JSON-LD) · `robots.txt` (sitemap nuevo + `Disallow: /admin`) · `sitemap.xml` (1 → 4 URLs públicas) · `Seo.tsx` (canonical por página + og/twitter dinámicos + prop `noindex`) · 9 páginas privadas en `noindex` · `vercel.json` con 308 del alias vercel.app al dominio propio. Verificado en producción: canonical, og:url, robots.txt, sitemap.xml y el 308.
 
 ### Pendientes solo manuales (requieren dashboards externos)
 - [ ] N1 · Supabase → Edge Functions → push-notify → Secrets → `VAPID_PRIVATE_KEY`
 - [ ] N2 · Vercel → Settings → Env Vars → `VITE_VAPID_PUBLIC_KEY`
 - [ ] H1-H4 · Google OAuth (Supabase + Google Console)
+- [ ] **G1 · Google Search Console** (todo lo técnico ya está live, falta solo esto):
+  1. [search.google.com/search-console](https://search.google.com/search-console) → Añadir propiedad → **Dominio** → `equilibriumfood.ar` (cubre www + apex + subdominios)
+  2. Google devuelve un registro TXT → cargarlo en **Vercel → Domains → `equilibriumfood.ar` → pestaña Vercel DNS** → Add Record (Type `TXT`, Name `@`) → Verify. *(El DNS está delegado a los nameservers de Vercel; NIC.ar no hostea registros.)*
+  3. Sitemaps → enviar `sitemap.xml`
+  4. Inspección de URLs → `https://www.equilibriumfood.ar/` y `/restaurants` → Solicitar indexación
+  - Alternativa sin DNS: propiedad tipo **Prefijo de URL** + verificación por etiqueta HTML en `index.html`.
+  - Indexación tarda de días a ~2 semanas. Chequear progreso con `site:equilibriumfood.ar`.
 
 ---
-*v5.5 · 2026-07-26 — dominio propio equilibriumfood.ar*
+*v5.6 · 2026-07-26 — migración SEO al dominio propio (M11)*
