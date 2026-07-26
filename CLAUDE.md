@@ -12,7 +12,14 @@ App full-stack live en Vercel. Auth completo (email + forgot/reset password). Ch
 | Supabase Project | `rzevfdpsozjrdqixxiex` |
 | Vercel Project | `equilibrium-food` · `prj_XXUmtmLkTo8nPmfiuoIF6RfGFGGE` |
 | Vercel Team | `team_y858qJaSBj8WXao7BeeuNIlO` |
+| Dominio propio | `equilibriumfood.ar` (registrado en NIC.ar) · principal: `www.equilibriumfood.ar` |
 | POS (NO tocar) | `rkeqsfmfzacazgzacoin` |
+
+### Dominio `equilibriumfood.ar` (configurado 2026-07-26)
+- **Registrar**: NIC.ar (registrante Cristian Israel Vazquez Diaz) · alta 13/05/2026 · vence 13/05/2027 — **renovar antes de esa fecha**.
+- **DNS**: delegado a los nameservers de Vercel → `ns1.vercel-dns.com` / `ns2.vercel-dns.com` (Vercel maneja la zona completa + SSL). NIC.ar no hostea registros A/CNAME propios; cualquier cambio de DNS se hace desde Vercel (pestaña "Vercel DNS" del dominio).
+- **Vercel Domains**: `www.equilibriumfood.ar` es el dominio principal (Production); el apex `equilibriumfood.ar` redirige (308) a www.
+- **SSL**: lo emite Vercel automáticamente al validar los nameservers. Tras la delegación queda en "Invalid Configuration" hasta que propague el DNS (min → 24-48 hs); usar **Refresh** en el panel de Domains si tarda.
 
 Stack: React 18 + TS + Vite 5 · Vanilla CSS · Framer Motion 11 · React Router v6 · Supabase · Vercel
 
@@ -90,4 +97,4 @@ npm run build
 - [ ] H1-H4 · Google OAuth (Supabase + Google Console)
 
 ---
-*v5.4 · 2026-04-19*
+*v5.5 · 2026-07-26 — dominio propio equilibriumfood.ar*
