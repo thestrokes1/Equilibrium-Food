@@ -12,8 +12,11 @@ interface SeoProps {
 
 const BASE = 'Equilibrium Food';
 const SITE_URL = 'https://www.equilibriumfood.ar';
+// Defaults must mirror index.html — pages that render <Seo /> with no title
+// (the home page) would otherwise overwrite the static tags with weaker copy.
+const DEFAULT_TITLE = 'Equilibrium — Food Delivery';
 const DEFAULT_DESC =
-  'Order your favourite meals from the best local restaurants. Fast delivery, great prices.';
+  'Equilibrium — your favorite meals delivered to your door in under 30 minutes. Real food, real fast.';
 const DEFAULT_IMAGE = `${SITE_URL}/images/smash-burger.jpg`;
 const INDEXABLE = 'index, follow, max-image-preview:large, max-snippet:-1';
 
@@ -43,7 +46,7 @@ export default function Seo({ title, description, image, noindex }: SeoProps) {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    const fullTitle = title ? `${title} — ${BASE}` : BASE;
+    const fullTitle = title ? `${title} — ${BASE}` : DEFAULT_TITLE;
     const desc = description ?? DEFAULT_DESC;
     const img = image ? (image.startsWith('http') ? image : `${SITE_URL}${image}`) : DEFAULT_IMAGE;
     // Canonical always points at the www domain, without query/hash.
@@ -63,7 +66,7 @@ export default function Seo({ title, description, image, noindex }: SeoProps) {
     setMeta('name', 'twitter:image', img);
 
     return () => {
-      document.title = BASE;
+      document.title = DEFAULT_TITLE;
       setMeta('name', 'description', DEFAULT_DESC);
       setMeta('name', 'robots', INDEXABLE);
     };
