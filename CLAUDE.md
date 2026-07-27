@@ -1,7 +1,7 @@
 # CLAUDE.md — Equilibrium Food
 
 ## Estado actual
-App full-stack live en Vercel. Auth completo (email + forgot/reset password). Checkout → Orders → OrderDetail con realtime tracking, print ticket, re-order y **order ratings** (1-5 estrellas + comentario, editable). Admin panel completo con 4 tabs (Dashboard con reviews panel · Orders con realtime · Menu CRUD · Restaurants CRUD). Favoritos con Supabase. LazyImage con IntersectionObserver. 52 tests en 7 archivos, 0 lint errors, 9 migraciones, 0 advisor warnings. Navegación/redirects auditada y corregida (M8). Layout completo en todas las páginas (Orders, OrderDetail, Profile, NotFound). TrackOrder page activa. SEO migrado al dominio propio `www.equilibriumfood.ar` (canonical por página, JSON-LD, sitemap, noindex en páginas privadas, 308 desde el alias de Vercel) — falta solo dar de alta Google Search Console (G1).
+App full-stack live en Vercel. Auth completo (email + forgot/reset password). Checkout → Orders → OrderDetail con realtime tracking, print ticket, re-order y **order ratings** (1-5 estrellas + comentario, editable). Admin panel completo con 4 tabs (Dashboard con reviews panel · Orders con realtime · Menu CRUD · Restaurants CRUD). Favoritos con Supabase. LazyImage con IntersectionObserver. 52 tests en 7 archivos, 0 lint errors, 9 migraciones, 0 advisor warnings. Navegación/redirects auditada y corregida (M8). Layout completo en todas las páginas (Orders, OrderDetail, Profile, NotFound). TrackOrder page activa. SEO migrado al dominio propio `www.equilibriumfood.ar` (canonical por página, JSON-LD, sitemap, noindex en páginas privadas, 308 desde el alias de Vercel). Google Search Console verificado por TXT, sitemap enviado e indexación solicitada (G1) — esperando que Google indexe.
 
 ---
 
@@ -99,13 +99,12 @@ npm run build
 - [ ] N1 · Supabase → Edge Functions → push-notify → Secrets → `VAPID_PRIVATE_KEY`
 - [ ] N2 · Vercel → Settings → Env Vars → `VITE_VAPID_PUBLIC_KEY`
 - [ ] H1-H4 · Google OAuth (Supabase + Google Console)
-- [ ] **G1 · Google Search Console** (todo lo técnico ya está live, falta solo esto):
-  1. [search.google.com/search-console](https://search.google.com/search-console) → Añadir propiedad → **Dominio** → `equilibriumfood.ar` (cubre www + apex + subdominios)
-  2. Google devuelve un registro TXT → cargarlo en **Vercel → Domains → `equilibriumfood.ar` → pestaña Vercel DNS** → Add Record (Type `TXT`, Name `@`) → Verify. *(El DNS está delegado a los nameservers de Vercel; NIC.ar no hostea registros.)*
-  3. Sitemaps → enviar `sitemap.xml`
-  4. Inspección de URLs → `https://www.equilibriumfood.ar/` y `/restaurants` → Solicitar indexación
-  - Alternativa sin DNS: propiedad tipo **Prefijo de URL** + verificación por etiqueta HTML en `index.html`.
-  - Indexación tarda de días a ~2 semanas. Chequear progreso con `site:equilibriumfood.ar`.
+- [x] **G1 · Google Search Console** (completado 2026-07-27):
+  - Propiedad tipo **Dominio** `sc-domain:equilibriumfood.ar` (cubre www + apex + subdominios, http y https).
+  - Verificada por **registro TXT en el apex** — está cargado en Vercel DNS con el comentario `Google Search Console domain verification`. **No borrar ese TXT**: si se elimina, Google revoca la verificación y se pierde el acceso a la propiedad.
+  - `sitemap.xml` enviado. Sirve `200` con `Content-Type: application/xml`. Justo después de enviarlo la tabla de Sitemaps muestra "No se ha podido obtener" — es cosmético, Google lo encola y lo lee después.
+  - Indexación solicitada para `/` y `/restaurants`. Ambas quedaron en cola de rastreo prioritaria.
+  - **Pendiente de Google**: la indexación tarda de días a ~2 semanas. Chequear con `site:equilibriumfood.ar` o en Search Console → Páginas.
 
 ---
-*v5.6 · 2026-07-26 — migración SEO al dominio propio (M11)*
+*v5.7 · 2026-07-27 — Google Search Console dado de alta y verificado (G1)*
